@@ -14,6 +14,7 @@ Tile.directions = {
 TileLink = function(tile1, tile2) {
     this.tiles = [tile1, tile2];
     this.state = TileLink.stateEnum.CLEAR;
+    this.highlighted = false
 }
 
 TileLink.prototype.other = function(tile) {

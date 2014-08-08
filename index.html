@@ -61,6 +61,14 @@
     function mouseMoved(newX, newY) {
         mouseX = newX;
         mouseY = newY;
+        // highlight closest link
+        x = mouseX - W / 2;
+        y = mouseY - H / 2;
+        var link = level.getClosestLink(x, y);
+        if (link) {
+            link.highlighted = true;
+            redraw();
+        }
     }
 
     function mouseClick(x, y) {
@@ -80,6 +88,7 @@
                     link.state = TileLink.stateEnum.CLEAR;
                     break;
             }
+            link.highlighted = true;
             redraw();
         }
 

@@ -145,7 +145,12 @@ Level.prototype.getClosestLink = function(x, y) {
     } else {
         quadrant = Tile.directions.LEFT;
     }
-    return this.grid.getLink(new TileLinkDescriptor(tileX, tileY, quadrant));
+
+    var closestLink = null;
+    if (tileX >= 0 && tileX < this.grid.sizeX && tileY >= 0 && tileY < this.grid.sizeY) {
+        closestLink = this.grid.getLink(new TileLinkDescriptor(tileX, tileY, quadrant));
+    }
+    return closestLink;
 }
 
 Level.prototype.isFinished = function() {
@@ -325,6 +330,17 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
             c.fill();
             c.stroke();
             break;
+    }
+
+    if (link.highlighted) {
+        c.save();
+        c.beginPath();
+        c.globalAlpha = 0.5;
+        c.fillStyle = link.state == TileLink.stateEnum.LEVEL_WALL ? "red" : "blue";
+        c.arc(0, 0, this.tileSize / 8, 0, Math.PI * 2);
+        c.fill();
+        c.restore();
+        link.highlighted = false;
     }
 
     c.restore();
