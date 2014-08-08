@@ -1,0 +1,56 @@
+    html {
+        background: #221900;
+        font-family: 'Open Sans', sans-serif;
+    }
+    .hidden {
+        display: none;
+    }
+    #game {
+        background-color: #E9E1C5;
+        width: 65%;
+        text-align: center;
+        bottom: 1em;
+        padding:5px;
+        border-radius: 5px;
+    }
+    #game #editor_form {
+        display: none;
+    }
+    #game canvas {
+        display: inline-block;
+        position: relative;
+        background: white;
+        margin: 0.5em 0em;
+        box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    #ui {
+        position: fixed;
+        font-size: 11pt;
+        line-height: 1.25em;
+        right: 1em;
+        top: 1em;
+        background-color: #E9E1C5;
+        padding: 8px;
+        text-align: center;
+        bottom: 1em;
+        width: 30%;
+        border-radius: 5px;
+        z-index: 100;
+    }
+    #ui a:link {
+        text-decoration: none;
+        color: #e9c546;
+    }
+    #ui a:visited {
+        text-decoration: none;
+        color: #7b6825;
+    }
+    #ui a:hover {
+        text-decoration: underline;
+        color: #b39736;
+    }
+    #ui a:active {
+        text-decoration: none;
+        color: white;
+    }

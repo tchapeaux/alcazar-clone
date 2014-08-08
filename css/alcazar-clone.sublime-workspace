@@ -1,0 +1,1383 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"back",
+				"background-color"
+			],
+			[
+				"reset",
+				"resetLevel"
+			],
+			[
+				"border",
+				"borderWidth"
+			],
+			[
+				"LinkD",
+				"TileLinkDescriptor"
+			],
+			[
+				"direction",
+				"directionsArray"
+			],
+			[
+				"Tile",
+				"TileLink"
+			],
+			[
+				"fill",
+				"fillStyle"
+			],
+			[
+				"USER",
+				"USER_WALL"
+			],
+			[
+				"USE",
+				"USER_WALL"
+			],
+			[
+				"prot",
+				"prototype"
+			],
+			[
+				"TileL",
+				"TileLinkDescriptor"
+			],
+			[
+				"LEVE",
+				"LEVEL_WALL"
+			],
+			[
+				"IN",
+				"IN_PATH"
+			],
+			[
+				"neigh",
+				"neighborsLink"
+			],
+			[
+				"LE",
+				"LEVEL_WALL"
+			],
+			[
+				"nei",
+				"neighborsLink"
+			],
+			[
+				"game",
+				"game_thumbnail"
+			],
+			[
+				"stack",
+				"stackmachine_id"
+			],
+			[
+				"stac",
+				"stackmachine_id"
+			],
+			[
+				"En",
+				"EntitySet"
+			],
+			[
+				"gravityF",
+				"gravityFieldY"
+			],
+			[
+				"segm",
+				"segmentB_same"
+			],
+			[
+				"update",
+				"updateForces"
+			],
+			[
+				"sys",
+				"systemStr"
+			],
+			[
+				"tas",
+				"taskStr"
+			],
+			[
+				"succe",
+				"success	statement"
+			],
+			[
+				"otherS",
+				"otherSched"
+			],
+			[
+				"futur",
+				"futureList"
+			],
+			[
+				"success",
+				"successes"
+			],
+			[
+				"draw",
+				"drawRectangle	function"
+			],
+			[
+				"FORMAT_",
+				"FORMAT_ARGB32	statement"
+			],
+			[
+				"EDF",
+				"EDFNonOptimal	statement"
+			],
+			[
+				"noFPD",
+				"noFPDITpctsPerCDF"
+			],
+			[
+				"lcm",
+				"lcmArray	function"
+			],
+			[
+				"findF",
+				"findFirstDIT"
+			],
+			[
+				"drawA",
+				"drawArrivalsAndDeadlines	function"
+			],
+			[
+				"PIL",
+				"PILDrawer	class"
+			],
+			[
+				"NotImp",
+				"NotImplementedError	class"
+			],
+			[
+				"Long",
+				"LongTransitive	statement"
+			],
+			[
+				"global",
+				"global	module"
+			],
+			[
+				"Imp",
+				"ImpFTPNonOptimal	statement"
+			],
+			[
+				"E",
+				"ExhaustiveFixedPriority	class"
+			],
+			[
+				"def",
+				"default_priority	function"
+			],
+			[
+				"Mus",
+				"MustIdle	statement"
+			],
+			[
+				"net",
+				"nextArrivals"
+			],
+			[
+				"min",
+				"minimalCompRequired	statement"
+			],
+			[
+				"preempt",
+				"preempted"
+			],
+			[
+				"comp",
+				"computationLeft"
+			],
+			[
+				"nextA",
+				"nextArrival	function"
+			],
+			[
+				"sch",
+				"schedulers"
+			],
+			[
+				"int",
+				"interest	statement"
+			],
+			[
+				"mu",
+				"mpanaSchedule	statement"
+			],
+			[
+				"Must",
+				"MustPreemptAtNoArrival	statement"
+			],
+			[
+				"user",
+				"userSchedule	statement"
+			],
+			[
+				"use",
+				"userSchedule"
+			],
+			[
+				"Sched",
+				"SchedulerDP	class"
+			],
+			[
+				"ear",
+				"earliestPreemptiveArrival	function"
+			],
+			[
+				"deadl",
+				"drawnDeadlineMissCount	statement"
+			],
+			[
+				"CKE",
+				"CKEDFNonOptimal	statement"
+			],
+			[
+				"sa",
+				"saveConfiguration	function"
+			],
+			[
+				"check",
+				"checkConfig	function"
+			],
+			[
+				"dead",
+				"deadlineMisses	statement"
+			],
+			[
+				"inst",
+				"instantWidth	statement"
+			],
+			[
+				"compute",
+				"computeBusyJobs	function"
+			],
+			[
+				"Keep",
+				"KeepForLater	statement"
+			],
+			[
+				"Clo",
+				"CloudAtlas	statement"
+			],
+			[
+				"SameP",
+				"SamePriorityHijinks3	statement"
+			],
+			[
+				"Sam",
+				"SamePriorityHijinks3	statement"
+			],
+			[
+				"fin",
+				"finishTime	statement"
+			],
+			[
+				"exp",
+				"expectedResult"
+			],
+			[
+				"assert",
+				"assertIs	function"
+			],
+			[
+				"updat",
+				"updateHeaps	function"
+			],
+			[
+				"upda",
+				"updatePriorities	function"
+			],
+			[
+				"simu",
+				"simuPALLF"
+			],
+			[
+				"C",
+				"ChooseKeepEDF	import"
+			],
+			[
+				"Co",
+				"ChooseKeepEDF"
+			],
+			[
+				"fini",
+				"finishTime"
+			],
+			[
+				"d",
+				"deadline"
+			],
+			[
+				"Spot",
+				"SpotlightEDFNonOptimal	statement"
+			],
+			[
+				"st",
+				"set_trace	function"
+			],
+			[
+				"pree",
+				"preemptiveJob"
+			],
+			[
+				"set",
+				"set_trace	function"
+			],
+			[
+				"Schedu",
+				"SchedulerFJP	class"
+			],
+			[
+				"busy",
+				"busyTuples	(local, instance)"
+			],
+			[
+				"acti",
+				"activeCPUsHeap	(attribute, instance)"
+			],
+			[
+				"idle",
+				"idlePriority"
+			],
+			[
+				"earl",
+				"earliestPreempArrival"
+			],
+			[
+				"prio",
+				"priorities"
+			],
+			[
+				"active",
+				"activeCPUsHeap"
+			],
+			[
+				"schedu",
+				"schedulerName"
+			],
+			[
+				"e",
+				"ellipse"
+			],
+			[
+				"outli",
+				"outlineColor"
+			],
+			[
+				"height",
+				"heightMargin"
+			],
+			[
+				"in",
+				"instantWidth"
+			],
+			[
+				"task",
+				"taskHeight"
+			],
+			[
+				"widt",
+				"widthMargin"
+			],
+			[
+				"heigh",
+				"heightMargin"
+			],
+			[
+				"mo",
+				"mostPrioritaryJob"
+			],
+			[
+				"activcpu",
+				"activeCPUsHeap"
+			],
+			[
+				"activ",
+				"activeCPUsHeap"
+			],
+			[
+				"preempedCPU",
+				"preemptedCPUs"
+			],
+			[
+				"ma",
+				"maxCstrcnt"
+			],
+			[
+				"return",
+				"returnTuple"
+			],
+			[
+				"cssiz",
+				"cstrSizes"
+			],
+			[
+				"cspa",
+				"cspacepruned_onePass"
+			],
+			[
+				"tau",
+				"tau_Cspace_noredun"
+			],
+			[
+				"remov",
+				"removeRedundancy"
+			],
+			[
+				"nofpd",
+				"noFPDITpcts2"
+			],
+			[
+				"no",
+				"noFPDITpcts4"
+			],
+			[
+				"Task",
+				"TaskSystem"
+			],
+			[
+				"rescsp",
+				"resultCSPACE"
+			],
+			[
+				"cs",
+				"Cspace"
+			],
+			[
+				"dea",
+				"deadlineInRange"
+			],
+			[
+				"up",
+				"upperLimit"
+			],
+			[
+				"tes",
+				"testCVector"
+			],
+			[
+				"cspace",
+				"cspace_noredun"
+			],
+			[
+				"system",
+				"systemArray"
+			],
+			[
+				"tau_CSp",
+				"tau_Cspace_noredun"
+			],
+			[
+				"tau_Cspace",
+				"tau_Cspace_noredun"
+			],
+			[
+				"resPosi",
+				"resPositionStart"
+			],
+			[
+				"res",
+				"resultMaximization"
+			],
+			[
+				"redu",
+				"redundant_temp"
+			],
+			[
+				"fid",
+				"firstDITs"
+			],
+			[
+				"jobB",
+				"jobBeforeT1"
+			],
+			[
+				"lis",
+				"listOfPrimes"
+			],
+			[
+				"congruence",
+				"congruencePrimalPower"
+			],
+			[
+				"syst",
+				"systemArray"
+			],
+			[
+				"gener",
+				"generateSystemArray"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 220.0,
+		"selected_items":
+		[
+			[
+				"git init",
+				"Git: Init"
+			],
+			[
+				"ident",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"push",
+				"Git: Push"
+			],
+			[
+				"status",
+				"Git: Status"
+			],
+			[
+				"pull",
+				"Git: Pull"
+			],
+			[
+				"prefuse",
+				"Preferences: Settings - User"
+			],
+			[
+				"checkout",
+				"Git: Checkout"
+			],
+			[
+				"ame",
+				"Git: Amend Commit"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"pus",
+				"Git: Push"
+			],
+			[
+				"syntax mark",
+				"Set Syntax: Markdown"
+			],
+			[
+				"yaml",
+				"Set Syntax: YAML"
+			],
+			[
+				"stayus",
+				"Set Syntax: ClojureScript"
+			],
+			[
+				"syntax",
+				"Set Syntax: YAML"
+			],
+			[
+				"statis",
+				"Set Syntax: ActionScript"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"amen",
+				"Git: Amend Commit"
+			],
+			[
+				"stats",
+				"Git: Status"
+			],
+			[
+				"user",
+				"Preferences: Settings - User"
+			],
+			[
+				"syntax comm",
+				"Set Syntax: SublimeGit Commit Message"
+			],
+			[
+				"satus",
+				"Git: Status"
+			],
+			[
+				"statu",
+				"Git: Status"
+			],
+			[
+				"branch",
+				"Legit: Branches"
+			],
+			[
+				"log",
+				"Git: Log"
+			],
+			[
+				"staus",
+				"Git: Status"
+			],
+			[
+				"add",
+				"Git: Add Current File"
+			],
+			[
+				"commi",
+				"Git: Commit"
+			],
+			[
+				"stat",
+				"Git: Status"
+			],
+			[
+				"check",
+				"Git: Checkout"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Enable Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"remov",
+				"Package Control: Remove Package"
+			],
+			[
+				"gitstaus",
+				"Git: Status"
+			],
+			[
+				"git st",
+				"Git: Stash"
+			],
+			[
+				"STATUS",
+				"Git: Status"
+			],
+			[
+				"amend",
+				"Git: Amend Commit"
+			],
+			[
+				"git status",
+				"Git: Status"
+			],
+			[
+				"dicti",
+				"Snippet: LaTeXing Option Dictionary"
+			],
+			[
+				"latexing di",
+				"LaTeXing: Word to Phrases Dictionary"
+			],
+			[
+				"latex",
+				"LaTeXing: Documentation"
+			],
+			[
+				"upgr",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"pdb",
+				"SublimeREPL: Python - PDB current file"
+			],
+			[
+				"packa",
+				"Preferences: Browse Packages"
+			],
+			[
+				"package control",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"update",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"run",
+				"Preferences: Key Bindings - User"
+			],
+			[
+				"legit",
+				"Legit: Sync"
+			],
+			[
+				"snippet item",
+				"Snippet: Itemize"
+			],
+			[
+				"sni",
+				"Snippet: self"
+			],
+			[
+				"snippet",
+				"Snippet: Function"
+			],
+			[
+				"prb",
+				"Preferences: Browse Packages"
+			],
+			[
+				"pdbn",
+				"SublimeREPL: Python - PDB current file"
+			],
+			[
+				"pdb ",
+				"SublimeREPL: Python - PDB current file"
+			],
+			[
+				"pdb cu",
+				"SublimeREPL: Python - PDB current file"
+			],
+			[
+				"repl py",
+				"SublimeREPL: Python - RUN current file"
+			],
+			[
+				"git p",
+				"Git: Push"
+			],
+			[
+				"repl pdb",
+				"SublimeREPL: Python - PDB current file"
+			],
+			[
+				"go to d",
+				"Python: Go to definition"
+			],
+			[
+				"commit",
+				"Git: Commit"
+			],
+			[
+				"Snippet: ",
+				"Snippet: Matrix"
+			],
+			[
+				"PUSH",
+				"Git: Push"
+			],
+			[
+				"help",
+				"Git: Help"
+			],
+			[
+				"PULL",
+				"Git: Pull"
+			],
+			[
+				"statyus",
+				"Snippet: Table: New Table Columntypes"
+			],
+			[
+				"statusd",
+				"Snippet: Wrap Environment Around Selected Text"
+			],
+			[
+				"lo",
+				"Git: Log"
+			],
+			[
+				"git pull",
+				"Git: Pull"
+			],
+			[
+				"psuh",
+				"Git: Push"
+			],
+			[
+				"merge",
+				"Git: Merge"
+			],
+			[
+				"git push",
+				"Git: Push"
+			],
+			[
+				"beamer",
+				"Snippet: New Beamer"
+			],
+			[
+				"git",
+				"Git: Diff"
+			],
+			[
+				"gut",
+				"Git: Status"
+			],
+			[
+				"Snippet: Bibtex ",
+				"Snippet: BibTeX Article"
+			],
+			[
+				"Snippet: Bibtex arti",
+				"Snippet: BibTeX Article"
+			],
+			[
+				"gith",
+				"GitHubinator"
+			]
+		],
+		"width": 570.0
+	},
+	"console":
+	{
+		"height": 166.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/thomas/Dropbox/Repositories/alcazar-clone/css/style.css",
+		"/home/thomas/Dropbox/Repositories/alcazar-clone/js/grid.js",
+		"/home/thomas/Dropbox/Repositories/alcazar-clone/js/level.js",
+		"/home/thomas/Dropbox/Repositories/alcazar-clone/js/levels.js",
+		"/home/thomas/Dropbox/Repositories/alcazar-clone/index.html",
+		"/home/thomas/Dropbox/Repositories/alcazar-clone/font/OFL.txt",
+		"/home/thomas/Dropbox/Repositories/alcazar-clone/levels.js",
+		"/home/thomas/Dropbox/Repositories/compugem-projet/a_bi.html",
+		"/home/thomas/Dropbox/Repositories/alcazar-clone/grid.js",
+		"/home/thomas/Dropbox/Repositories/alcazar-clone/level.js",
+		"/home/thomas/Dropbox/Repositories/alcazar-clone/style.css",
+		"/home/thomas/Dropbox/Repositories/compugem-projet/geometry.js",
+		"/home/thomas/Dropbox/Repositories/compugem-projet/a1.html",
+		"/home/thomas/Dropbox/Repositories/alcazar-clone/test.html",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-alcazar-clone/love-alcazar-clone.sublime-project",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/about.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_posts/2014-06-07-lovemoon-blank-overview.markdown",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_layouts/layout.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_config.yml",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_posts/2014-07-27-goooal.markdown",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/README.sublime-workspace",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/CNAME",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/404.html",
+		"/home/thomas/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_posts/2014-05-08-draft-writing.md",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_posts/2014-04-23-ramblings.markdown",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_posts/2014-02-25-draft.markdown",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_site/posts/left/index.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_data/games.yml",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/games.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/css/base.css",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/blog.sublime-project",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_posts/2012-12-12-left.markdown",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/left-master/_data/games.yml",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/left-master/_layouts/post.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/left-master/about.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/left-master/games.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/left-master/_layouts/layout.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/left-master/_config.yml",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_includes/sidebar.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/left-master/index.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/left-master/css/base.css",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/index.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/left-master/_posts/2012-12-12-left.markdown",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/left-master/_posts/2014-02-25-draft.markdown",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/left-master/CNAME",
+		"/home/thomas/Dropbox/Public/Sous-titres/portal2/Comic/script.js",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_posts/2014-03-30-book-review-improv-for-everyone.markdown",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-gameoflive/README.md",
+		"/home/thomas/Dropbox/Public/Sous-titres/portal2/Comic/comic.html",
+		"/home/thomas/Dropbox/Public/Sous-titres/portal2/Comic/comic_javascript.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_posts/2014-04-14-portal-2-lab-rat.markdown",
+		"/home/thomas/Dropbox/Public/Sous-titres/portal2/Comic/pagesFromPreview.txt",
+		"/home/thomas/Dropbox/Public/Sous-titres/portal2/Comic/part1.txt",
+		"/home/thomas/Dropbox/Public/Sous-titres/portal2/Comic/part1&2.txt",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_includes/header.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/README.md",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/paginator.html",
+		"/home/thomas/Dropbox/CV/moderncv-banking/main.tex",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_posts/2014-03-29-welcome-to-jekyll.markdown",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_layouts/default.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_includes/default.html",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/_posts/2013-11-15-configuration.md",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/.gitignore~",
+		"/home/thomas/Dropbox/Repositories/tchapeaux.github.io/tchapeaux.github.io/.gitignore",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/TODO.md",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/obstacle.moon",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/variables.moon",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/main.moon",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/node.moon",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/gen_love/obstacle.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/backup_lua/obstacle.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/thirdparty/love-release.sh",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/rope.moon",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/Makefile",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/gen_love/rope.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/backup_lua/ropeClass.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/rope.sublime-project",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/lib/lgm/lgm-vector.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/lib/lgm/lgm.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/gen_love/node.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/lua-LGM/src/lgm-entity.moon",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/lib/lgm/lgm-entity.lua",
+		"/home/thomas/Dropbox/CV/SWIFT/0903-debriefinterview.txt",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/gen_love/main.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/backup_lua/main.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/lib/lgm/lgm-entityset.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/gen_love/lib/lgm/lgm.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/resources.moon",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/README.md",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/conf.moon",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/gen_love/lib/lgm/lgm-test.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/lib/lgm/lgm-test.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/src/lib/lgm/lgm-segment.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-gameoflive/gameoflife.sublime-project",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/super-communist/super-communist.sublime-project",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/lua-LGM/src/lgm-entityset.moon",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/lua-LGM/src/lgm-vector.moon",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/super-communist/src/dude.moon",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/lua-LGM/LICENSE",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/LICENSE",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/super-communist/src/bafaltom2D.moon",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/main.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/obstacle.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/ropeClass.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/lua-LGM/src/lgm-segment.moon",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/lib/lgm/lgm-base.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/lib/lgm/lgm-entity.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/lib/lgm/lgm-entityset.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/lib/lgm/lgm-segment.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/lib/lgm/lgm-test.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/lib/lgm/lgm.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/lib/lgm/lgm-vector.lua",
+		"/home/thomas/Dropbox/INFO4_Private/Computational Geometry/info-f-420-weekly/rightLeftTurn/anything.pde",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/variables.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/bafaltom2D.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/ropeClass.lua~",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-rope/conf.lua",
+		"/home/thomas/Dropbox/Repositories/LÖVE_projects/love-gameoflive/gen_love/conf.lua",
+		"/home/thomas/Dropbox/Repositories/ece-dit-paper/beamer/dit-paper-presentation.tex",
+		"/home/thomas/Dropbox/Public/programmation/LOVE/ropetest/resources.lua",
+		"/home/thomas/Dropbox/Public/programmation/LOVE/ropetest/rope.sublime-project",
+		"/home/thomas/Dropbox/Repositories/super-communist/super-communist.sublime-project",
+		"/home/thomas/Dropbox/Repositories/python-poker/Deck.py",
+		"/home/thomas/Dropbox/Repositories/python-poker/Hand.py",
+		"/home/thomas/Dropbox/Repositories/python-poker/Player.py",
+		"/home/thomas/Dropbox/Repositories/python-poker/Poker.py",
+		"/home/thomas/Dropbox/Repositories/python-poker/Card.py"
+	],
+	"find":
+	{
+		"height": 43.0
+	},
+	"find_in_files":
+	{
+		"height": 112.0,
+		"where_history":
+		[
+			"<open folders>",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"outer",
+			"you wi",
+			"reset",
+			"var",
+			".CLEAR",
+			"CLEAR",
+			".draw",
+			"console",
+			"stateen",
+			"errorMessage",
+			"directions",
+			"stateEnum",
+			"link.stateEnum",
+			"stateEnum",
+			"directions",
+			"prototype.",
+			"proto",
+			"?",
+			"TileLink.",
+			"directionsArr",
+			"drawLink(",
+			"console",
+			"descriptor",
+			"var desc",
+			"USER_WALL",
+			"translate",
+			"getclos",
+			"dash",
+			"save",
+			"linedash",
+			"new Tile",
+			"tilelinkdesc",
+			"CLEAR",
+			"indexof",
+			"index",
+			"extremities",
+			"extremi",
+			"tileSize",
+			"fill",
+			".fill",
+			"color",
+			"fill",
+			"Tile(",
+			"tilelink(",
+			"set",
+			"draw",
+			"new array()",
+			"redraw",
+			"neighEnum",
+			"for",
+			"}\n",
+			"contains",
+			"indexof",
+			"array",
+			"arra",
+			"array",
+			"arra",
+			"ccontex",
+			"ULB",
+			"{% for game in site.data.games %}\n    <h2>{{ game.name }}</h2>\n    <p>{{ game.short_descr }}\n    <ul>\n        {% if game.github_id %}\n            <li><a href=\"https://github.com/{{ game.github_id }}\">Source (Github)</a></li>\n        {% endif %}\n        {% if game.stackmachine_id %}\n            <li><a href=\"https://stackmachine.com/games/{{ game.stackmachine_id }}/download/windows\">Download (Windows)</a></li>\n            <li><a href=\"https://stackmachine.com/games/{{ game.stackmachine_id }}/download/osx\">Download (OSX)</a></li>\n            <li><a href=\"https://stackmachine.com/games/{{ game.stackmachine_id }}/download/love\">Download (.love file)</a></li>\n        {% endif %}\n    </ul>\n{% endfor %}\n",
+			"The",
+			"**",
+			"is is",
+			"\"",
+			"github",
+			"fa",
+			"layout: page",
+			"page",
+			"page.html",
+			"page-header",
+			"tagline",
+			"page.title",
+			"date",
+			"fa-folder",
+			"fa",
+			"in your config file",
+			"intersect",
+			"print",
+			"Entity",
+			"setNorm",
+			"print",
+			"userNode",
+			"pB",
+			"rope\\",
+			"rope",
+			"updateOther",
+			"closestNode",
+			"update",
+			"closestN",
+			"seg",
+			"links",
+			"getClosestOF",
+			"closestOb",
+			"getClosestOf",
+			"NORM",
+			"print",
+			"updatePos",
+			"@X",
+			"make_link",
+			"tostring",
+			"make_link",
+			"entityset",
+			"blood",
+			"linksDist",
+			"@nodes",
+			"unlink",
+			"updateForces",
+			"linksDistance",
+			"make_link",
+			"nodeClass",
+			"updateother",
+			"speedX",
+			"closestObstacle",
+			"other",
+			"speedUserObstacle",
+			"path",
+			"center",
+			"theorem",
+			"otherSched",
+			"parallelArgs",
+			"parallelA",
+			"parallel",
+			"t",
+			"alpha",
+			"idle",
+			"activ",
+			"drawer",
+			"deadlinemiss"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"[]",
+			"directions",
+			"Zach Holman",
+			"[H]",
+			"Cairo",
+			"mAlg",
+			",",
+			"",
+			"algo",
+			",",
+			"self.assertEquals(",
+			"self.assertEquals",
+			"(",
+			",",
+			"PTEDF",
+			"CompLeft",
+			"userSchedule",
+			", [",
+			"Trap",
+			"leastPrioritaryCPU",
+			"checkResult",
+			"job.alpha()",
+			"preempTime",
+			"preemTime",
+			"biggestActivePriority",
+			"20",
+			"activeCPUsHeap",
+			"ISBN",
+			"transient",
+			"onePass",
+			"twoPass",
+			"",
+			"$,",
+			"\n[",
+			"pruned",
+			"self",
+			"constraint",
+			"n_i",
+			"primalSystem",
+			"reduceSum",
+			"sumU",
+			"primalSystem",
+			"systemArray",
+			"time.clock",
+			"tau",
+			"taskSystem",
+			"H"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 39.0
+	},
+	"input":
+	{
+		"height": 40.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 164.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.git-init":
+	{
+		"height": 164.0
+	},
+	"project": "alcazar-clone.sublime-project",
+	"replace":
+	{
+		"height": 82.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"obstalua",
+				"gen_love/obstacle.lua"
+			],
+			[
+				"obstaclelua",
+				"gen_love/obstacle.lua"
+			],
+			[
+				"ropelu",
+				"gen_love/rope.lua"
+			],
+			[
+				"nodelua",
+				"gen_love/node.lua"
+			],
+			[
+				"nolua",
+				"gen_love/node.lua"
+			],
+			[
+				"node",
+				"gen_love/node.lua"
+			],
+			[
+				"main",
+				"gen_love/main.lua"
+			],
+			[
+				"mainlu",
+				"backup_lua/main.lua"
+			],
+			[
+				"nodem",
+				"src/node.moon"
+			],
+			[
+				"ropelua",
+				"gen_love/rope.lua"
+			],
+			[
+				"oblua",
+				"gen_love/obstacle.lua"
+			],
+			[
+				"ropl",
+				"gen_love/rope.lua"
+			],
+			[
+				"ba",
+				"bafaltom2D.lua"
+			],
+			[
+				"sim",
+				"Simulator/Simulator.py"
+			],
+			[
+				"sche",
+				"Simulator/Scheduler.py"
+			],
+			[
+				"scheduler",
+				"Simulator/Scheduler.py"
+			],
+			[
+				"sched",
+				"Simulator/Scheduler.py"
+			],
+			[
+				"mainsim",
+				"mainSimu.py"
+			],
+			[
+				"job",
+				"Model/Job.py"
+			],
+			[
+				"ck",
+				"Simulator/ChooseKeepEDF.py"
+			],
+			[
+				"ta",
+				"Model/Task.py"
+			],
+			[
+				"fire",
+				"FireBallClass.lua"
+			],
+			[
+				"algo",
+				"~/Dropbox/Repositories/ece-dit-paper/python-simulation/algorithms.py"
+			],
+			[
+				"my",
+				"~/Dropbox/stage/StateOfTheArt/DITstudy/myAlgebra.py"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 38.0,
+		"selected_items":
+		[
+			[
+				"",
+				"bafaltomAngle"
+			]
+		],
+		"width": 360.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 158.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

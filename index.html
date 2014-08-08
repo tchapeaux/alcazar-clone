@@ -1,0 +1,129 @@
+<!doctype html>
+<head>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <title>OpenAlcazar</title>
+</head>
+
+
+<script src="js/grid.js"></script>
+<script src="js/level.js"></script>
+<script src="js/levels.js"></script>
+<script src="thirdparty/lzstring/lzstring.js"></script>
+
+
+<body>
+
+<p class="hidden"><img src="img/background_pattern.png" id="background"></p>
+
+
+<div id="ui">
+    <img src="img/title.png" width="100%"/>
+    <h2>An open-source clone of <a href="http://www.theincrediblecompany.com/try-alcazar">Alcazar</a></h2>
+    <p>
+        <strong>Rules</strong><br/>
+        Enter and exit <em>each square</em> exactly once<br/>
+        Enter and exit <em>the room</em> exactly once
+    </p>
+
+    <p>
+        <strong>Levels</strong><br/>
+        <a id="Level_1" href="#">001 (Trivial)</a><br/>
+        <a id="Level_2" href="#">002 (Easy)</a><br/>
+        <a id="Level_3" href="#">003 (Alcatraz Demo Level 5)</a><br/>
+    </p>
+
+    <!-- <p><a id="LevelEditor" href="#">Switch to Editor mode</a></p> -->
+</div>
+
+
+<div id="game">
+
+<span id="winMessage"></span><br/>
+
+<span id="editor_form">EDITOR MODE ENABLED</span>
+
+<canvas width="640" height="600" onmousemove="mouseMoved(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop)" onclick="mouseClick(mouseX, mouseY);"></canvas>
+
+
+<script>
+    var canvas = document.querySelector("canvas");
+    canvas.onmousedown = function() {return false;}
+    var c = canvas.getContext("2d");
+
+    var editorMode = false;
+    var level = getHardTestLevel()
+
+    const W = canvas.width;
+    const H = canvas.height;
+
+    function mouseMoved(newX, newY) {
+        mouseX = newX;
+        mouseY = newY;
+    }
+
+    function mouseClick(x, y) {
+        // apply offset to mouse position
+        x -= W / 2;
+        y -= H / 2;
+        var link = level.getClosestLink(x, y);
+        if (link) {
+            switch (link.state) {
+                case TileLink.stateEnum.CLEAR:
+                    link.state = TileLink.stateEnum.IN_PATH;
+                    break;
+                case TileLink.stateEnum.IN_PATH:
+                    link.state = TileLink.stateEnum.USER_WALL;
+                    break;
+                case TileLink.stateEnum.USER_WALL:
+                    link.state = TileLink.stateEnum.CLEAR;
+                    break;
+            }
+            redraw();
+        }
+
+        if (level.isFinished()) {
+            winMessage.textContent = "You win !";
+        }
+    }
+
+    var link = document.getElementById("Level_1");
+    link.onclick = function() { level = getTrivialTestLevel(); redraw(); }
+    var link = document.getElementById("Level_2");
+    link.onclick = function() { level = getEasyTestLevel(); redraw(); }
+    var link = document.getElementById("Level_3");
+    link.onclick = function() { level = getMediumTestLevel(); redraw(); }
+
+    function resetLevel() {
+        level.reset();
+        redraw();
+    }
+
+    function redraw() {
+        c.save();
+
+        var img = document.getElementById("background");
+        var pat = c.createPattern(img, "repeat");
+        c.fillStyle = pat;
+        c.setLineDash([]);
+        c.beginPath();
+        c.rect(0, 0, W, H);
+        c.fill();
+
+        c.translate(W / 2, H / 2);
+        level.draw(c);
+
+        c.restore();
+    }
+
+    window.onload = redraw;
+
+</script>
+
+<br/>
+<button onclick="resetLevel()">Reset Level</button>
+
+</div>
+
+</body>
