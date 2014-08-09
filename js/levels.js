@@ -5,7 +5,7 @@ function getTrivialTestLevel() {
     doors.push(new TileLinkDescriptor(0, 0, Tile.directions.UP));
     doors.push(new TileLinkDescriptor(0, 1, Tile.directions.DOWN));
     var level = new Level(2, 2, walls, doors);
-    level.tileSize = 200;
+    level.fitCanvasDimension(W, H);
     return level;
 }
 
@@ -19,7 +19,7 @@ function getEasyTestLevel() {
     doors.push(new TileLinkDescriptor(0, 0, Tile.directions.UP));
     doors.push(new TileLinkDescriptor(0, 3, Tile.directions.DOWN));
     var level = new Level(4, 4, walls, doors);
-    level.tileSize = 100;
+    level.fitCanvasDimension(W, H);
     return level;
 }
 
@@ -45,7 +45,7 @@ function getMediumTestLevel() {
     doors.push(new TileLinkDescriptor(4, 6, Tile.directions.RIGHT));
     doors.push(new TileLinkDescriptor(0, 6, Tile.directions.LEFT));
     var level = new Level(5, 8, walls, doors);
-    level.tileSize = 70;
+    level.fitCanvasDimension(W, H);
     return level;
 }
 
@@ -88,22 +88,10 @@ function getHardTestLevel() {
 function serializeLevel(level) {
     levelString = "W" + level.grid.sizeX + "H" + level.grid.sizeY;
     levelString += "+WALLS+"
-    for (var i = 0; i < level.grid.sizeX; i++) {
-        for (var j = 0; j < level.grid.sizeY; j++) {
-            var directionsArray = [
-            Tile.directions.UP,
-            Tile.directions.DOWN,
-            Tile.directions.LEFT,
-            Tile.directions.RIGHT
-            ];
-            for (var d = 0; d < directionsArray.length; d++) {
-                var dir = directionsArray[d];
-                var link = level.grid.getLink(new TileLinkDescriptor(i, j, dir));
-                if (link && link.state == TileLink.stateEnum.LEVEL_WALL) {
-                    levelString += i + "-" + j + "-" + dir + "-";
-                }
-            }
-        }
+    var levelWalls = level.grid.getLevelWalls();
+    for (var i = 0; i < levelWalls.length; i++) {
+        var descr = levelWalls[i];
+        levelString += descr.x + "-" + descr.y + "-" + descr.dir + "-";
     }
 
     levelString += "+DOORS+"

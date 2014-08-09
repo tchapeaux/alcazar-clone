@@ -91,3 +91,24 @@ Grid.prototype.getDoors = function() {
     }
     return doors;
 }
+
+Grid.prototype.getLevelWalls = function() {
+    var levelWalls = [];
+    for (var i = 0; i < this.sizeX; i++) {
+        for (var j = 0; j < this.sizeY; j++) {
+            var directionsArray = [
+            // only two directions (else we get duplicates)
+            Tile.directions.UP,
+            Tile.directions.LEFT,
+            ];
+            for (var d = 0; d < directionsArray.length; d++) {
+                var dir = directionsArray[d];
+                var link = level.grid.getLink(new TileLinkDescriptor(i, j, dir));
+                if (link && link.state == TileLink.stateEnum.LEVEL_WALL) {
+                    levelWalls.push(new TileLinkDescriptor(i, j, dir));
+                }
+            }
+        }
+    }
+    return levelWalls;
+}

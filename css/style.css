@@ -54,3 +54,18 @@
         text-decoration: none;
         color: white;
     }
+
+    #editor_form {
+        color: #221900;
+        font-size: 12pt;
+        font-weight: bold;
+    }
+    #editor_form input[type=number] {
+        padding:5px;
+        border:2px solid #221900;
+        font-size: 12pt;
+        font-weight: bold;
+        background-color: #E9E1C5;
+        border-radius: 5px;
+        text-align: center;
+    }

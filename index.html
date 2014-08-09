@@ -20,7 +20,7 @@
 
 <div id="ui">
     <img src="img/title.png" width="100%"/>
-    <h2>An open-source clone of <a href="http://www.theincrediblecompany.com/try-alcazar">Alcazar</a></h2>
+    <h2>An <a href="https://github.com/tchapeaux/alcazar-clone">open-source</a> clone of <a href="http://www.theincrediblecompany.com/try-alcazar">Alcazar</a></h2>
     <p>
         <strong>Rules</strong><br/>
         Enter and exit <em>each square</em> exactly once<br/>
@@ -34,17 +34,39 @@
         <a id="Level_3" href="#">003 (Alcazar Demo Level 5)</a><br/>
     </p>
 
-    <!-- <p><a id="LevelEditor" href="#">Switch to Editor mode</a></p> -->
+    <p><a id="LevelEditor" href="#">Toggle Editor mode</a></p>
 </div>
 
+<script>
+    var link = document.getElementById("Level_1");
+    link.onclick = function() { level = getTrivialTestLevel(); redraw(); }
+    var link = document.getElementById("Level_2");
+    link.onclick = function() { level = getEasyTestLevel(); redraw(); }
+    var link = document.getElementById("Level_3");
+    link.onclick = function() { level = getMediumTestLevel(); redraw(); }
+
+    function toggleEditorMode() {
+        editorMode = !editorMode;
+        var form = document.getElementById("editor_form");
+        form.style.display = editorMode ? "block" : "none";
+        var widthInput = document.getElementById("editor_width");
+        widthInput.value = level.grid.sizeX;
+        var heightInput = document.getElementById("editor_height");
+        heightInput.value = level.grid.sizeY;
+        var gameDiv = document.getElementById("game");
+        gameDiv.style["background-color"] = editorMode ? "#d4c48e" : "#E9E1C5";
+        resetLevel();
+    }
+
+    var link = document.getElementById("LevelEditor");
+    link.onclick = toggleEditorMode;
+</script>
 
 <div id="game">
 
 <span id="winMessage"></span><br/>
 
-<span id="editor_form">EDITOR MODE ENABLED</span>
-
-<canvas width="640" height="600" onmousemove="mouseMoved(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop)" onclick="mouseClick(mouseX, mouseY);"></canvas>
+<canvas width="800" height="600" onmousemove="mouseMoved(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop)" onclick="mouseClick(mouseX, mouseY);"></canvas>
 
 
 <script>
@@ -52,11 +74,12 @@
     canvas.onmousedown = function() {return false;}
     var c = canvas.getContext("2d");
 
-    var editorMode = false;
-    var level = getEasyTestLevel()
-
     const W = canvas.width;
     const H = canvas.height;
+
+    var editorMode = false;
+    var level = getEasyTestLevel()
+    level.fitCanvasDimension(W, H);
 
     function mouseMoved(newX, newY) {
         mouseX = newX;
@@ -77,18 +100,30 @@
         y -= H / 2;
         var link = level.getClosestLink(x, y);
         if (link) {
-            switch (link.state) {
-                case TileLink.stateEnum.CLEAR:
-                    link.state = TileLink.stateEnum.IN_PATH;
-                    break;
-                case TileLink.stateEnum.IN_PATH:
-                    link.state = TileLink.stateEnum.USER_WALL;
-                    break;
-                case TileLink.stateEnum.USER_WALL:
-                    link.state = TileLink.stateEnum.CLEAR;
-                    break;
+            if (!editorMode) {
+                switch (link.state) {
+                    case TileLink.stateEnum.CLEAR:
+                        link.state = TileLink.stateEnum.IN_PATH;
+                        break;
+                    case TileLink.stateEnum.IN_PATH:
+                        link.state = TileLink.stateEnum.USER_WALL;
+                        break;
+                    case TileLink.stateEnum.USER_WALL:
+                        link.state = TileLink.stateEnum.CLEAR;
+                        break;
+                }
+                link.highlighted = true;
             }
-            link.highlighted = true;
+            else { // editorMode
+                switch (link.state) {
+                    case TileLink.stateEnum.CLEAR:
+                        link.state = TileLink.stateEnum.LEVEL_WALL;
+                        break;
+                    case TileLink.stateEnum.LEVEL_WALL:
+                        link.state = TileLink.stateEnum.CLEAR;
+                        break;
+                }
+            }
             redraw();
         }
 
@@ -97,13 +132,6 @@
         }
     }
 
-    var link = document.getElementById("Level_1");
-    link.onclick = function() { level = getTrivialTestLevel(); redraw(); }
-    var link = document.getElementById("Level_2");
-    link.onclick = function() { level = getEasyTestLevel(); redraw(); }
-    var link = document.getElementById("Level_3");
-    link.onclick = function() { level = getMediumTestLevel(); redraw(); }
-
     function resetLevel() {
         level.reset();
         redraw();
@@ -111,14 +139,24 @@
 
     function redraw() {
         c.save();
-
         var img = document.getElementById("background");
         var pat = c.createPattern(img, "repeat");
+        c.save();
         c.fillStyle = pat;
         c.setLineDash([]);
         c.beginPath();
         c.rect(0, 0, W, H);
         c.fill();
+        c.restore();
+        if (editorMode) {
+            c.save()
+            c.fillStyle = "rgb(100, 100, 100)";
+            c.globalAlpha = 0.5;
+            c.beginPath();
+            c.rect(0, 0, W, H);
+            c.fill();
+            c.restore()
+        }
 
         c.translate(W / 2, H / 2);
         level.draw(c);
@@ -133,8 +171,37 @@
 <br/>
 <button onclick="resetLevel()">Reset Level</button>
 
+<div id="editor_form">
+<h2>EDITOR MODE ENABLED</h2>
+
+<form>
+    Width: <input type="number" name="gridWidth" id="editor_width" min="1" max="20" size="2"> |
+    Height: <input type="number" name="gridWidth" id="editor_height" min="1" max="20" size="2">
+</form>
+
+<script>
+
+    var widthInput = document.getElementById("editor_width");
+    widthInput.onchange = function() {
+        var newWidth = parseInt(widthInput.value);
+        level.resize(newWidth, level.grid.sizeY);
+        level.fitCanvasDimension(W, H);
+        redraw();
+    }
+    var heightInput = document.getElementById("editor_height");
+    heightInput.onchange = function() {
+        var newHeight = parseInt(heightInput.value);
+        level.resize(level.grid.sizeX, newHeight);
+        level.fitCanvasDimension(W, H);
+        redraw();
+    }
+
+</script>
+
+<p>Click in the level to modify walls and doors.</p>
+
 </div>
 
-<a href="https://github.com/tchapeaux/alcazar-clone"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/c6625ac1f3ee0a12250227cf83ce904423abf351/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png"></a>
+</div>
 
 </body>

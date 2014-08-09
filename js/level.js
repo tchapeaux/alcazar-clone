@@ -5,10 +5,12 @@ Level = function(sizeX, sizeY, walls, doors) {
     ***/
 
     this.grid = new Grid(sizeX, sizeY);
-    this.tileSize = 50; // px
+    this.tileSize = 50;
+    this.borderWidth = 30;
 
     for (var i = 0; i < walls.length; i++) {
         var wall = walls[i];
+        console.log(wall);
         link = this.grid.getLink(wall);
         link.state = TileLink.stateEnum.LEVEL_WALL;
     }
@@ -22,18 +24,71 @@ Level = function(sizeX, sizeY, walls, doors) {
     }
 }
 
+Level.prototype.resize = function(newSizeX, newSizeY) {
+    // get doors and walls info
+    var walls = this.grid.getLevelWalls();
+    var doors = this.grid.getDoors();
+
+    // Filter invalid walls and doors with regards to new sizes
+    var newWalls = [];
+    var newDoors = [];
+    if (newSizeX < this.grid.sizeX || newSizeY < this.grid.sizeY) {
+        var newWalls = [];
+        for (var i = 0; i < walls.length; i++) {
+            var wall = walls[i];
+            // down and right walls might become borders (difficult to handle)
+            // -> translate them into down and up walls
+            if (wall.dir == Tile.directions.RIGHT) {
+                wall.x += 1;
+                wall.dir = Tile.directions.LEFT;
+            }
+            if (wall.dir == Tile.directions.DOWN) {
+                wall.y += 1;
+                wall.dir = Tile.directions.UP;
+            }
+            if (wall.x < newSizeX && wall.y < newSizeY) {
+                newWalls.push(wall);
+                console.log("pushed", wall, "because", wall.x, "<", newSizeX);
+            }
+        }
+        var newDoors = [];
+        for (var i = 0; i < doors.length; i++) {
+            var door = doors[i];
+            if (door.x < newSizeX && door.y < newSizeY) {
+                newDoors.push(door);
+            }
+        }
+    }
+    else {
+        newWalls = walls; newDoors = doors;
+    }
+
+    console.log("new level params", newSizeX, newSizeY)
+    console.log("new", newWalls, newDoors);
+
+    var newLevel = new Level(newSizeX, newSizeY, newWalls, newDoors);
+    console.log("newlevel", newLevel);
+    this.grid = newLevel.grid;
+}
+
+Level.prototype.fitCanvasDimension = function(W, H) {
+    this.tileSize = Math.min(
+        (W - 2 * this.borderWidth) / this.grid.sizeX,
+        (H - 2 * this.borderWidth) / this.grid.sizeY
+        );
+}
+
 Level.prototype.draw = function(c) {
     c.save();
 
     c.translate(-this.grid.sizeX * this.tileSize / 2, -this.grid.sizeY * this.tileSize / 2);
 
     // border
-    var borderWidth = 30;
     c.fillStyle = "rgb(100, 100, 100)";
     c.beginPath();
-    c.rect(-borderWidth, -borderWidth,
-        this.grid.sizeX * this.tileSize + borderWidth * 2,
-        this.grid.sizeY * this.tileSize + borderWidth * 2);
+    c.rect(-this.borderWidth, -this.borderWidth,
+        this.grid.sizeX * this.tileSize + this.borderWidth * 2,
+        this.grid.sizeY * this.tileSize + this.borderWidth * 2);
     c.fill();
 
     // draw tile in a chess-like pattern
