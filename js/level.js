@@ -10,13 +10,25 @@ Level = function(sizeX, sizeY, walls, doors) {
 
     for (var i = 0; i < walls.length; i++) {
         var wall = walls[i];
-        console.log(wall);
         link = this.grid.getLink(wall);
         link.state = TileLink.stateEnum.LEVEL_WALL;
     }
 
     for (var i = 0; i < doors.length; i++) {
         var door = doors[i];
+        // assert valid door position
+        if (door.dir == Tile.directions.LEFT
+        || door.dir == Tile.directions.RIGHT) {
+            if (door.x != 0 && door.x != sizeX - 1) {
+                throw new RangeError("Invalid x door position: " + String(door.x));
+            }
+        }
+        if (door.dir == Tile.directions.UP
+        || door.dir == Tile.directions.DOWN) {
+            if (door.y != 0 && door.y != sizeY - 1) {
+                throw new RangeError("Invalid y door position: " + String(door.y));
+            }
+        }
         tile = this.grid.getTile(door.x, door.y);
         link = new TileLink(tile, this.grid.outerTile);
         tile.neighborsLink[door.dir] = link;
@@ -32,42 +44,39 @@ Level.prototype.resize = function(newSizeX, newSizeY) {
     // Filter invalid walls and doors with regards to new sizes
     var newWalls = [];
     var newDoors = [];
-    if (newSizeX < this.grid.sizeX || newSizeY < this.grid.sizeY) {
-        var newWalls = [];
-        for (var i = 0; i < walls.length; i++) {
-            var wall = walls[i];
-            // down and right walls might become borders (difficult to handle)
-            // -> translate them into down and up walls
-            if (wall.dir == Tile.directions.RIGHT) {
-                wall.x += 1;
-                wall.dir = Tile.directions.LEFT;
-            }
-            if (wall.dir == Tile.directions.DOWN) {
-                wall.y += 1;
-                wall.dir = Tile.directions.UP;
-            }
-            if (wall.x < newSizeX && wall.y < newSizeY) {
-                newWalls.push(wall);
-                console.log("pushed", wall, "because", wall.x, "<", newSizeX);
-            }
+    var newWalls = [];
+    for (var i = 0; i < walls.length; i++) {
+        var wall = walls[i];
+        // down and right walls might become borders (difficult to handle)
+        // -> translate them into up and left walls
+        if (wall.dir == Tile.directions.RIGHT) {
+            wall.x += 1;
+            wall.dir = Tile.directions.LEFT;
         }
-        var newDoors = [];
-        for (var i = 0; i < doors.length; i++) {
-            var door = doors[i];
-            if (door.x < newSizeX && door.y < newSizeY) {
-                newDoors.push(door);
-            }
+        if (wall.dir == Tile.directions.DOWN) {
+            wall.y += 1;
+            wall.dir = Tile.directions.UP;
+        }
+        if (wall.x < newSizeX && wall.y < newSizeY) {
+            newWalls.push(wall);
         }
     }
-    else {
-        newWalls = walls; newDoors = doors;
+    var newDoors = [];
+    for (var i = 0; i < doors.length; i++) {
+        var door = doors[i];
+        // keep outer doors (right/down) at the border
+        if (door.dir == Tile.directions.RIGHT) {
+            door.x = newSizeX - 1;
+        }
+        if (door.dir == Tile.directions.DOWN) {
+            door.y = newSizeY - 1;
+        }
+        if (door.x < newSizeX && door.y < newSizeY ) {
+            newDoors.push(door);
+        }
     }
-
-    console.log("new level params", newSizeX, newSizeY)
-    console.log("new", newWalls, newDoors);
 
     var newLevel = new Level(newSizeX, newSizeY, newWalls, newDoors);
-    console.log("newlevel", newLevel);
     this.grid = newLevel.grid;
 }
 
