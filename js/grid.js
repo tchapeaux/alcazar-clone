@@ -40,6 +40,12 @@ TileLink.prototype.other = function(tile) {
     else { throw new Error("Provided tile not in TileLink"); }
 }
 
+TileLink.prototype.isDoor = function() {
+    // doors have the outer tile (coordinates -1, -1) as one of their tiles
+    return (this.tiles[0].x == -1 && this.tiles[0].y == -1)
+        || (this.tiles[1].x == -1 && this.tiles[1].y == -1)
+}
+
 TileLink.stateEnum = {
     USER_WALL : "USER WALL",
     LEVEL_WALL : "LEVEL WALL",

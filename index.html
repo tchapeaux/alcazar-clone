@@ -83,9 +83,12 @@
         // highlight closest link
         x = mouseX - W / 2;
         y = mouseY - H / 2;
-        var link = level.getClosestLink(x, y);
-        if (link) {
-            link.highlighted = true;
+        var linkDescr = level.getClosestLink(x, y);
+        if (linkDescr) {
+            var link = level.grid.getLink(linkDescr);
+            if (link) {
+                link.highlighted = true;
+            }
         }
         redraw();
     }
@@ -94,23 +97,31 @@
         // apply offset to mouse position
         x -= W / 2;
         y -= H / 2;
-        var link = level.getClosestLink(x, y);
-        if (link) {
-            if (!editorMode) {
-                switch (link.state) {
-                    case TileLink.stateEnum.CLEAR:
-                        link.state = TileLink.stateEnum.IN_PATH;
-                        break;
-                    case TileLink.stateEnum.IN_PATH:
-                        link.state = TileLink.stateEnum.USER_WALL;
-                        break;
-                    case TileLink.stateEnum.USER_WALL:
-                        link.state = TileLink.stateEnum.CLEAR;
-                        break;
+        var linkDescr = level.getClosestLink(x, y);
+        if (!editorMode) {
+            if (linkDescr) {
+                var link = level.grid.getLink(linkDescr);
+                if (link) {
+                    switch (link.state) {
+                        case TileLink.stateEnum.CLEAR:
+                            link.state = TileLink.stateEnum.IN_PATH;
+                            break;
+                        case TileLink.stateEnum.IN_PATH:
+                            link.state = TileLink.stateEnum.USER_WALL;
+                            break;
+                        case TileLink.stateEnum.USER_WALL:
+                            link.state = TileLink.stateEnum.CLEAR;
+                            break;
+                    }
+                    link.highlighted = true;
                 }
-                link.highlighted = true;
             }
-            else { // editorMode
+        }
+        else { // editorMode
+            var link = null;
+            if (linkDescr) { link = level.grid.getLink(linkDescr); }
+
+            if (link && !link.isDoor()) { // level wall toggling
                 switch (link.state) {
                     case TileLink.stateEnum.CLEAR:
                         link.state = TileLink.stateEnum.LEVEL_WALL;
@@ -119,9 +130,29 @@
                         link.state = TileLink.stateEnum.CLEAR;
                         break;
                 }
+            } else { // door toggling
+                if (!link) {
+                    if (linkDescr) {
+                        level.makeDoor(linkDescr);
+                    } else {
+                        var doorDescr = level.getClosestDoorPosition(x, y);
+                        // check if door already exists
+                        var doorLink = level.grid.getLink(doorDescr);
+                        if (doorLink) {
+                            level.removeDoor(doorDescr);
+                        } else {
+                            level.makeDoor(doorDescr);
+                        }
+                    }
+                } else {
+                    // assert link is door (should be enforced earlier)
+                    if (!link.isDoor()) { throw new Error("Invalid door position"); }
+                    level.removeDoor(linkDescr);
+                }
             }
-            redraw();
         }
+
+        redraw();
 
         if (level.isFinished()) {
             winMessage.textContent = "You win !";

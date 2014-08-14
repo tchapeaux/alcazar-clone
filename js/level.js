@@ -15,24 +15,43 @@ Level = function(sizeX, sizeY, walls, doors) {
     }
 
     for (var i = 0; i < doors.length; i++) {
-        var door = doors[i];
-        // assert valid door position
-        if (door.dir == Tile.directions.LEFT
-        || door.dir == Tile.directions.RIGHT) {
-            if (door.x != 0 && door.x != sizeX - 1) {
-                throw new RangeError("Invalid x door position: " + String(door.x));
-            }
+        this.makeDoor(doors[i]);
+    }
+}
+
+Level.prototype.makeDoor = function(door) {
+    // assert valid door position
+    if (door.dir == Tile.directions.LEFT
+    || door.dir == Tile.directions.RIGHT) {
+        if (door.x != 0 && door.x != this.grid.sizeX - 1) {
+            throw new RangeError("Invalid x door position: " + String(door.x));
         }
-        if (door.dir == Tile.directions.UP
-        || door.dir == Tile.directions.DOWN) {
-            if (door.y != 0 && door.y != sizeY - 1) {
-                throw new RangeError("Invalid y door position: " + String(door.y));
-            }
+    }
+    if (door.dir == Tile.directions.UP
+    || door.dir == Tile.directions.DOWN) {
+        if (door.y != 0 && door.y != this.grid.sizeY - 1) {
+            throw new RangeError("Invalid y door position: " + String(door.y));
         }
-        tile = this.grid.getTile(door.x, door.y);
-        link = new TileLink(tile, this.grid.outerTile);
-        tile.neighborLinks[door.dir] = link;
-        this.grid.outerTile.neighborLinks.push(link);
+    }
+    tile = this.grid.getTile(door.x, door.y);
+    link = new TileLink(tile, this.grid.outerTile);
+    tile.neighborLinks[door.dir] = link;
+    this.grid.outerTile.neighborLinks.push(link);
+}
+
+Level.prototype.removeDoor = function(doorDescriptor) {
+    var door = this.grid.getLink(doorDescriptor);
+    // assert door exist
+    if (!door) {
+        throw new Error("removeDoor: door does not exist.");
+    }
+    var tile = this.grid.getTile(doorDescriptor.x, doorDescriptor.y);
+    tile.neighborLinks[doorDescriptor.dir] = null;
+    for (var i = 0; i < this.grid.outerTile.neighborLinks.length; i++) {
+        var link = this.grid.outerTile.neighborLinks[i];
+        if (link == door) {
+            this.grid.outerTile.neighborLinks.splice(i, 1);
+        }
     }
 }
 
@@ -207,9 +226,29 @@ Level.prototype.getClosestLink = function(x, y) {
 
     var closestLink = null;
     if (tileX >= 0 && tileX < this.grid.sizeX && tileY >= 0 && tileY < this.grid.sizeY) {
-        closestLink = this.grid.getLink(new TileLinkDescriptor(tileX, tileY, quadrant));
+        closestLink = new TileLinkDescriptor(tileX, tileY, quadrant);
     }
     return closestLink;
+}
+
+Level.prototype.getClosestDoorPosition = function(x, y) {
+    // apply grid centering offsets
+    x += Math.floor((this.grid.sizeX * this.tileSize) / 2);
+    y += Math.floor((this.grid.sizeY * this.tileSize) / 2);
+
+    if (y > 0 && y < this.grid.sizeY * this.tileSize) {
+        if (x < 0) {
+            return new TileLinkDescriptor(0, Math.floor(y / this.tileSize), Tile.directions.LEFT);
+        } else if ( x > this.tileSize * this.grid.sizeX) {
+            return new TileLinkDescriptor(this.grid.sizeX - 1, Math.floor(y / this.tileSize), Tile.directions.RIGHT);
+        }
+    } else if ( x > 0 && x < this.grid.sizeX * this.tileSize) {
+        if (y < 0) {
+            return new TileLinkDescriptor(Math.floor(x / this.tileSize), 0, Tile.directions.UP);
+        } else if (y > this.grid.sizeY * this.tileSize) {
+            return new TileLinkDescriptor(Math.floor(x / this.tileSize), this.grid.sizeY - 1, Tile.directions.DOWN);
+        }
+    }
 }
 
 Level.prototype.isFinished = function() {
