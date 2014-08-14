@@ -12,19 +12,15 @@
 <script src="js/levels.js"></script>
 <script src="thirdparty/lzstring/lzstring.js"></script>
 
-
 <body>
-
-<p class="hidden"><img src="img/background_pattern.png" id="background"></p>
-
 
 <div id="ui">
     <img src="img/title.png" width="100%"/>
     <h2>An <a href="https://github.com/tchapeaux/alcazar-clone">open-source</a> clone of <a href="http://www.theincrediblecompany.com/try-alcazar">Alcazar</a></h2>
     <p>
         <strong>Rules</strong><br/>
-        Enter and exit <em>each square</em> exactly once<br/>
-        Enter and exit <em>the room</em> exactly once
+        Enter and exit each square exactly once<br/>
+        Enter and exit the room exactly once
     </p>
 
     <p>
@@ -137,10 +133,13 @@
         redraw();
     }
 
+    var background_img = new Image;
+    background_img.onload = redraw;
+    background_img.src = "img/background_pattern.png";
+
     function redraw() {
         c.save();
-        var img = document.getElementById("background");
-        var pat = c.createPattern(img, "repeat");
+        var pat = c.createPattern(background_img, "repeat");
         c.save();
         c.fillStyle = pat;
         c.setLineDash([]);
