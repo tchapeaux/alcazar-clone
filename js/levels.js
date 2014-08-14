@@ -106,10 +106,19 @@ function serializeLevel(level) {
 }
 
 function deserializeLevel(levelString) {
+    if (levelString.split("+WALLS+").length != 2) {
+        throw new Error("Level string does not contain '+WALLS+'");
+    }
     var sizeInfo = levelString.split("+WALLS+")[0];
     sizeInfo = sizeInfo.slice(1);
+    if (sizeInfo.split("H").length != 2) {
+        throw new Error("Level string does not have height information");
+    }
     var sizeX = parseInt(sizeInfo.split("H")[0]);
     var sizeY = parseInt(sizeInfo.split("H")[1]);
+    if (isNaN(sizeX) || isNaN(sizeY)) {
+        throw new Error("Invalid level sizes in level string");
+    }
     var wallsInfo = levelString.split("+WALLS+")[1].split("+DOORS+")[0].split("-");
     var wallsInfo = wallsInfo.slice(0, -1); // remove last empty element
     var doorsInfo = levelString.split("+WALLS+")[1].split("+DOORS+")[1].split("-");
@@ -117,13 +126,18 @@ function deserializeLevel(levelString) {
     var walls = [];
 
     for (var i = 0; i < wallsInfo.length; i += 3) {
-        walls.push(new TileLinkDescriptor(wallsInfo[i], wallsInfo[i + 1], wallsInfo[i + 2]));
+        var x = parseInt(wallsInfo[i]);
+        var y = parseInt(wallsInfo[i + 1]);
+        var dir = wallsInfo[i + 2];
+        walls.push(new TileLinkDescriptor(x, y, dir));
     }
     var doors = [];
     for (var i = 0; i < doorsInfo.length; i += 3) {
-        doors.push(new TileLinkDescriptor(doorsInfo[i], doorsInfo[i + 1], doorsInfo[i + 2]));
+        var x = doorsInfo[i];
+        var y = doorsInfo[i + 1];
+        var dir = doorsInfo[i + 2];
+        doors.push(new TileLinkDescriptor(x, y, dir));
     }
-
 
     return new Level(sizeX, sizeY, walls, doors);
 

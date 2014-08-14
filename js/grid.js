@@ -6,18 +6,18 @@ Tile = function(x, y) {
 
 Tile.directions = {
     UP : "UP",
+    RIGHT : "RIGHT",
     DOWN : "DOWN",
-    LEFT : "LEFT",
-    RIGHT : "RIGHT"
+    LEFT : "LEFT"
 };
 
 Tile.prototype.getNeighborLinks = function() {
     var links = [];
     var directionsArray = [
         Tile.directions.UP,
+        Tile.directions.RIGHT,
         Tile.directions.DOWN,
-        Tile.directions.LEFT,
-        Tile.directions.RIGHT
+        Tile.directions.LEFT
     ];
     for (var i = 0; i < directionsArray.length; i++) {
         if (this.neighborLinks[directionsArray[i]]) {
@@ -54,6 +54,17 @@ TileLink.stateEnum = {
 };
 
 TileLinkDescriptor = function(x, y, dir) {
+    x = parseInt(x);
+    y = parseInt(y);
+    if (isNaN(x) || x < 0 || isNaN(y) || y < 0) {
+        throw new Error("TileLinkDescriptor: invalid x or y");
+    }
+    if (dir != Tile.directions.UP
+     && dir != Tile.directions.RIGHT
+     && dir != Tile.directions.LEFT
+     && dir != Tile.directions.DOWN) {
+        throw new Error("TileLinkDescriptor: invalid dir");
+    }
     this.x = x;
     this.y = y;
     this.dir = dir;

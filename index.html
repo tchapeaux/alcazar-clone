@@ -30,7 +30,15 @@
         <a id="Level_3" href="#">003 (Alcazar Demo Level 5)</a><br/>
     </p>
 
-    <p><a id="LevelEditor" href="#">Toggle Editor mode</a></p>
+    <p>
+        <strong>Load a level</strong><br/>
+        <span style="display: none;" id="loadLevel_error"><br/></span>
+        <input type="text" id="load_level_code" placeholder="Enter level code here"/><br/>
+        <button onclick="loadLevelCode();">Load</button>
+    </p>
+
+    <p><strong>Create your own levels</strong><br/>
+    <a id="LevelEditor" href="#">Toggle Editor mode</a></p>
 </div>
 
 <script>
@@ -52,6 +60,21 @@
         var gameDiv = document.getElementById("game");
         gameDiv.style["background-color"] = editorMode ? "#d4c48e" : "#E9E1C5";
         resetLevel();
+    }
+
+    function loadLevelCode() {
+        var code = load_level_code.value;
+        try {
+            if (code.length == 0) { throw new Error("Please enter level code.");}
+            level = deserializeLevel(LZString.decompressFromBase64(code));
+            level.fitCanvasDimension(W, H);
+            loadLevel_error.style.display = "none";
+        } catch (e) {
+            loadLevel_error.textContent = e.message;
+            loadLevel_error.style.display = "block";
+        } finally {
+            redraw();
+        }
     }
 
     var link = document.getElementById("LevelEditor");
@@ -194,6 +217,7 @@
         level.draw(c);
 
         c.restore();
+        populateLevelCode();
     }
 
     window.onload = redraw;
@@ -206,10 +230,16 @@
 <div id="editor_form">
 <h2>EDITOR MODE ENABLED</h2>
 
+<p>Click in the level to modify walls and doors.</p>
+
 <form>
     Width: <input type="number" name="gridWidth" id="editor_width" min="1" max="20" size="2"> |
     Height: <input type="number" name="gridWidth" id="editor_height" min="1" max="20" size="2">
 </form>
+
+<h2>Share your level</h2>
+<p>Copy-paste the following level code: <input type="text" id="save_level_code" active="false" value=""/>
+</p>
 
 <script>
 
@@ -228,9 +258,11 @@
         redraw();
     }
 
-</script>
+    function populateLevelCode() {
+        save_level_code.value = LZString.compressToBase64(serializeLevel(level));
+    }
 
-<p>Click in the level to modify walls and doors.</p>
+</script>
 
 </div>
 

@@ -55,6 +55,19 @@
         color: white;
     }
 
+    #ui input {
+        border:2px solid #7b6825;
+        font-size: 12pt;
+        color: black;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    #ui #loadLevel_error {
+        font-weight: bold;
+        color: red;
+    }
+
     #editor_form {
         color: #221900;
         font-size: 12pt;
