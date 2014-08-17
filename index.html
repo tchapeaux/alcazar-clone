@@ -68,12 +68,13 @@
     function loadLevelCode() {
         var code = load_level_code.value;
         try {
-            if (code.length == 0) { throw new Error("Please enter level code.");}
+            if (code.length == 0) { throw new Error("Empty level code");}
             level = deserializeLevel(LZString.decompressFromBase64(code));
             level.fitCanvasDimension(W, H);
             loadLevel_error.style.display = "none";
         } catch (e) {
-            loadLevel_error.textContent = e.message;
+            var message = "Invalid level code (" + e.message + ")";
+            loadLevel_error.textContent = message;
             loadLevel_error.style.display = "block";
         } finally {
             redraw();

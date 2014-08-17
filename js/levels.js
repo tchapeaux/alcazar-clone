@@ -107,17 +107,17 @@ function serializeLevel(level) {
 
 function deserializeLevel(levelString) {
     if (levelString.split("+WALLS+").length != 2) {
-        throw new Error("Level string does not contain '+WALLS+'");
+        throw new Error("Missing wall tag");
     }
     var sizeInfo = levelString.split("+WALLS+")[0];
     sizeInfo = sizeInfo.slice(1);
     if (sizeInfo.split("H").length != 2) {
-        throw new Error("Level string does not have height information");
+        throw new Error("Missing height tag");
     }
     var sizeX = parseInt(sizeInfo.split("H")[0]);
     var sizeY = parseInt(sizeInfo.split("H")[1]);
     if (isNaN(sizeX) || isNaN(sizeY)) {
-        throw new Error("Invalid level sizes in level string");
+        throw new Error("Invalid level sizes");
     }
     var wallsInfo = levelString.split("+WALLS+")[1].split("+DOORS+")[0].split("-");
     var wallsInfo = wallsInfo.slice(0, -1); // remove last empty element
