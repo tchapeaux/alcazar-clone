@@ -1,8 +1,10 @@
-Tile = function(x, y) {
+"use strict";
+
+var Tile = function(x, y) {
     this.x = x;
     this.y = y;
     this.neighborLinks = [];
-}
+};
 
 Tile.directions = {
     UP : "UP",
@@ -25,26 +27,27 @@ Tile.prototype.getNeighborLinks = function() {
         }
     }
     return links;
-}
+};
 
-TileLink = function(tile1, tile2) {
+var TileLink = function(tile1, tile2) {
     this.tiles = [tile1, tile2];
     this.state = TileLink.stateEnum.CLEAR;
-    this.highlighted = false
-}
+    this.highlighted = false;
+};
 
 TileLink.prototype.other = function(tile) {
     // return the other endpoint
     if (tile == this.tiles[0]) { return this.tiles[1]; }
     else if (tile == this.tiles[1]) { return this.tiles[0]; }
     else { throw new Error("Provided tile not in TileLink"); }
-}
+};
 
 TileLink.prototype.isDoor = function() {
     // doors have the outer tile (coordinates -1, -1) as one of their tiles
-    return (this.tiles[0].x == -1 && this.tiles[0].y == -1)
-        || (this.tiles[1].x == -1 && this.tiles[1].y == -1)
-}
+    var outer_is_0 = this.tiles[0].x == -1 && this.tiles[0].y == -1;
+    var outer_is_1 = this.tiles[1].x == -1 && this.tiles[1].y == -1;
+    return outer_is_0 || outer_is_1;
+};
 
 TileLink.stateEnum = {
     USER_WALL : "USER WALL",
@@ -53,24 +56,25 @@ TileLink.stateEnum = {
     CLEAR : "CLEAR"
 };
 
-TileLinkDescriptor = function(x, y, dir) {
+var TileLinkDescriptor = function(x, y, dir) {
     x = parseInt(x);
     y = parseInt(y);
     if (isNaN(x) || x < 0 || isNaN(y) || y < 0) {
         throw new Error("TileLinkDescriptor: invalid x or y");
     }
-    if (dir != Tile.directions.UP
-     && dir != Tile.directions.RIGHT
-     && dir != Tile.directions.LEFT
-     && dir != Tile.directions.DOWN) {
+    if (dir != Tile.directions.UP &&
+        dir != Tile.directions.RIGHT &&
+        dir != Tile.directions.LEFT &&
+        dir != Tile.directions.DOWN) {
         throw new Error("TileLinkDescriptor: invalid dir");
     }
     this.x = x;
     this.y = y;
     this.dir = dir;
-}
+};
 
-Grid = function(sizeX, sizeY) {
+var Grid = function(sizeX, sizeY) {
+    var link;
     this.sizeX = sizeX;
     this.sizeY = sizeY;
     this.tiles = [];
@@ -81,28 +85,28 @@ Grid = function(sizeX, sizeY) {
             var cur = this.tiles[i][j];
             if (i > 0) {
                 var left = this.tiles[i-1][j];
-                var link = new TileLink(cur, left);
+                link = new TileLink(cur, left);
                 cur.neighborLinks[Tile.directions.LEFT] = link;
                 left.neighborLinks[Tile.directions.RIGHT] = link;
             }
             if (j > 0) {
                 var up = this.tiles[i][j-1];
-                var link = new TileLink(cur, up);
+                link = new TileLink(cur, up);
                 cur.neighborLinks[Tile.directions.UP] = link;
                 up.neighborLinks[Tile.directions.DOWN] = link;
             }
         }
     }
     this.outerTile = new Tile(-1, -1); // represent "outside"
-}
+};
 
-Grid.prototype.getTile = function(i, j) { return this.tiles[i][j]; }
+Grid.prototype.getTile = function(i, j) { return this.tiles[i][j]; };
 Grid.prototype.getLink = function(linkDescriptor) {
-    x = linkDescriptor.x;
-    y = linkDescriptor.y;
-    dir = linkDescriptor.dir;
+    var x = linkDescriptor.x;
+    var y = linkDescriptor.y;
+    var dir = linkDescriptor.dir;
     return this.tiles[x][y].neighborLinks[dir];
-}
+};
 
 Grid.prototype.getDoors = function() {
     var doors = [];
@@ -124,7 +128,7 @@ Grid.prototype.getDoors = function() {
         }
     }
     return doors;
-}
+};
 
 Grid.prototype.getLevelWalls = function() {
     var levelWalls = [];
@@ -137,7 +141,7 @@ Grid.prototype.getLevelWalls = function() {
             ];
             for (var d = 0; d < directionsArray.length; d++) {
                 var dir = directionsArray[d];
-                var link = level.grid.getLink(new TileLinkDescriptor(i, j, dir));
+                var link = this.getLink(new TileLinkDescriptor(i, j, dir));
                 if (link && link.state == TileLink.stateEnum.LEVEL_WALL) {
                     levelWalls.push(new TileLinkDescriptor(i, j, dir));
                 }
@@ -145,4 +149,4 @@ Grid.prototype.getLevelWalls = function() {
         }
     }
     return levelWalls;
-}
+};

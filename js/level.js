@@ -1,4 +1,7 @@
-Level = function(sizeX, sizeY, walls, doors) {
+/*global Grid, Tile, TileLink, TileLinkDescriptor */
+"use strict";
+
+var Level = function(sizeX, sizeY, walls, doors) {
     /***
     walls: array of TileLinkDescriptor
     doors: array of TileLinkDescriptor
@@ -8,36 +11,36 @@ Level = function(sizeX, sizeY, walls, doors) {
     this.tileSize = 50;
     this.borderWidth = 30;
 
-    for (var i = 0; i < walls.length; i++) {
-        var wall = walls[i];
-        link = this.grid.getLink(wall);
+    for (var w = 0; w < walls.length; w++) {
+        var wall = walls[w];
+        var link = this.grid.getLink(wall);
         link.state = TileLink.stateEnum.LEVEL_WALL;
     }
 
-    for (var i = 0; i < doors.length; i++) {
-        this.makeDoor(doors[i]);
+    for (var d = 0; d < doors.length; d++) {
+        this.makeDoor(doors[d]);
     }
-}
+};
 
 Level.prototype.makeDoor = function(door) {
     // assert valid door position
-    if (door.dir == Tile.directions.LEFT
-    || door.dir == Tile.directions.RIGHT) {
-        if (door.x != 0 && door.x != this.grid.sizeX - 1) {
+    if (door.dir == Tile.directions.LEFT ||
+        door.dir == Tile.directions.RIGHT) {
+        if (door.x !== 0 && door.x != this.grid.sizeX - 1) {
             throw new RangeError("Invalid x door position: " + String(door.x));
         }
     }
-    if (door.dir == Tile.directions.UP
-    || door.dir == Tile.directions.DOWN) {
-        if (door.y != 0 && door.y != this.grid.sizeY - 1) {
+    if (door.dir == Tile.directions.UP ||
+        door.dir == Tile.directions.DOWN) {
+        if (door.y !== 0 && door.y != this.grid.sizeY - 1) {
             throw new RangeError("Invalid y door position: " + String(door.y));
         }
     }
-    tile = this.grid.getTile(door.x, door.y);
-    link = new TileLink(tile, this.grid.outerTile);
+    var tile = this.grid.getTile(door.x, door.y);
+    var link = new TileLink(tile, this.grid.outerTile);
     tile.neighborLinks[door.dir] = link;
     this.grid.outerTile.neighborLinks.push(link);
-}
+};
 
 Level.prototype.removeDoor = function(doorDescriptor) {
     var door = this.grid.getLink(doorDescriptor);
@@ -53,7 +56,7 @@ Level.prototype.removeDoor = function(doorDescriptor) {
             this.grid.outerTile.neighborLinks.splice(i, 1);
         }
     }
-}
+};
 
 Level.prototype.resize = function(newSizeX, newSizeY) {
     // get doors and walls info
@@ -62,10 +65,8 @@ Level.prototype.resize = function(newSizeX, newSizeY) {
 
     // Filter invalid walls and doors with regards to new sizes
     var newWalls = [];
-    var newDoors = [];
-    var newWalls = [];
-    for (var i = 0; i < walls.length; i++) {
-        var wall = walls[i];
+    for (var w = 0; w < walls.length; w++) {
+        var wall = walls[w];
         // down and right walls might become borders (difficult to handle)
         // -> translate them into up and left walls
         if (wall.dir == Tile.directions.RIGHT) {
@@ -81,8 +82,8 @@ Level.prototype.resize = function(newSizeX, newSizeY) {
         }
     }
     var newDoors = [];
-    for (var i = 0; i < doors.length; i++) {
-        var door = doors[i];
+    for (var d = 0; d < doors.length; d++) {
+        var door = doors[d];
         // keep outer doors (right/down) at the border
         if (door.dir == Tile.directions.RIGHT) {
             door.x = newSizeX - 1;
@@ -97,16 +98,17 @@ Level.prototype.resize = function(newSizeX, newSizeY) {
 
     var newLevel = new Level(newSizeX, newSizeY, newWalls, newDoors);
     this.grid = newLevel.grid;
-}
+};
 
 Level.prototype.fitCanvasDimension = function(W, H) {
     this.tileSize = Math.min(
         (W - 2 * this.borderWidth) / this.grid.sizeX,
         (H - 2 * this.borderWidth) / this.grid.sizeY
         );
-}
+};
 
 Level.prototype.draw = function(c) {
+    var i, j; // loop variables
     c.save();
 
     c.translate(-this.grid.sizeX * this.tileSize / 2, -this.grid.sizeY * this.tileSize / 2);
@@ -127,8 +129,8 @@ Level.prototype.draw = function(c) {
     // darker tiles
     c.fillStyle = "#cbc0a6";
     c.beginPath();
-    for (var i = 0; i < this.grid.sizeX; i++) {
-        for (var j = 0; j < this.grid.sizeY; j++) {
+    for (i = 0; i < this.grid.sizeX; i++) {
+        for (j = 0; j < this.grid.sizeY; j++) {
             if ((i + j) % 2 == 1) {
                 c.rect(i * this.tileSize, j * this.tileSize, this.tileSize, this.tileSize);
             }
@@ -141,8 +143,8 @@ Level.prototype.draw = function(c) {
     c.fillStyle = "blue";
     c.globalAlpha = "0.3";
     c.beginPath();
-    for (var i = 0; i < this.grid.sizeX; i++) {
-        for (var j = 0; j < this.grid.sizeY; j++) {
+    for (i = 0; i < this.grid.sizeX; i++) {
+        for (j = 0; j < this.grid.sizeY; j++) {
             var tile = this.grid.getTile(i, j);
             var pathLinkCount = 0;
             var neighborLinks = tile.getNeighborLinks();
@@ -164,13 +166,13 @@ Level.prototype.draw = function(c) {
     c.strokeStyle = "black";
     c.lineWidth = 2;
     c.setLineDash([5]);
-    for (var i = 0; i < this.grid.sizeX + 1; i++) {
+    for (i = 0; i < this.grid.sizeX + 1; i++) {
         c.beginPath();
         c.moveTo(i * this.tileSize, 0);
         c.lineTo(i * this.tileSize, this.tileSize * this.grid.sizeY);
         c.stroke();
     }
-    for (var j = 0; j < this.grid.sizeY + 1; j++) {
+    for (j = 0; j < this.grid.sizeY + 1; j++) {
         c.beginPath();
         c.moveTo(0, j * this.tileSize);
         c.lineTo(this.tileSize * this.grid.sizeX, j * this.tileSize);
@@ -179,8 +181,8 @@ Level.prototype.draw = function(c) {
 
     // draw link state
     // each tile draws its LEFT and UP link, so each link is drawn exactly once
-    for (var i = 0; i < this.grid.sizeX; i++) {
-        for (var j = 0; j < this.grid.sizeY; j++) {
+    for (i = 0; i < this.grid.sizeX; i++) {
+        for (j = 0; j < this.grid.sizeY; j++) {
             var cur = this.grid.getTile(i, j);
             if (i >= 1 && cur.neighborLinks[Tile.directions.LEFT]) {
                 this.drawLink(c, new TileLinkDescriptor(i, j, Tile.directions.LEFT));
@@ -192,13 +194,13 @@ Level.prototype.draw = function(c) {
     }
 
     var doors = this.grid.getDoors();
-    for (var i = 0; i < doors.length; i++) {
+    for (i = 0; i < doors.length; i++) {
         var door = doors[i];
         this.drawLink(c, door);
     }
 
     c.restore();
-}
+};
 
 Level.prototype.getClosestLink = function(x, y) {
     // apply grid centering offsets
@@ -229,7 +231,7 @@ Level.prototype.getClosestLink = function(x, y) {
         closestLink = new TileLinkDescriptor(tileX, tileY, quadrant);
     }
     return closestLink;
-}
+};
 
 Level.prototype.getClosestDoorPosition = function(x, y) {
     // apply grid centering offsets
@@ -249,14 +251,15 @@ Level.prototype.getClosestDoorPosition = function(x, y) {
             return new TileLinkDescriptor(Math.floor(x / this.tileSize), this.grid.sizeY - 1, Tile.directions.DOWN);
         }
     }
-}
+};
 
 Level.prototype.isFinished = function() {
+    var i, j, link, neighborLinks; // TODO: separate in subfunctions
     // first condition -- exactly two doors are used
     var oTile = this.grid.outerTile;
     var activeDoorCount = 0;
-    for (var i = 0; i < oTile.neighborLinks.length; i++) {
-        var link = oTile.neighborLinks[i];
+    for (i = 0; i < oTile.neighborLinks.length; i++) {
+        link = oTile.neighborLinks[i];
         if (link.state == TileLink.stateEnum.IN_PATH) {
             activeDoorCount++;
         }
@@ -267,30 +270,30 @@ Level.prototype.isFinished = function() {
 
     // second condition -- each tile is in the path (has exactly two links in path)
     // note that this does not detect loops
-    for (var i = 0; i < this.grid.sizeX; i++) {
-        for (var j = 0; j < this.grid.sizeY; j++) {
+    for (i = 0; i < this.grid.sizeX; i++) {
+        for (j = 0; j < this.grid.sizeY; j++) {
             var tile = this.grid.tiles[i][j];
             var pathCount = 0;
-            var neighborLinks = tile.getNeighborLinks();
+            neighborLinks = tile.getNeighborLinks();
             for (var d = 0; d < neighborLinks.length; d++) {
-                var link = neighborLinks[d];
+                link = neighborLinks[d];
                 if (link && link.state == TileLink.stateEnum.IN_PATH) {
                     pathCount++;
                 }
             }
             if (pathCount != 2) {
-                return false
-            };
+                return false;
+            }
         }
     }
 
     // third condition -- no loops
     // we test this by following the path and counting tiles
-    var startTile = null;
-    for (var i = 0; i < oTile.neighborLinks.length; i++) {
-        var link = oTile.neighborLinks[i];
+    var startTile;
+    for (i = 0; i < oTile.neighborLinks.length; i++) {
+        link = oTile.neighborLinks[i];
         if (link.state == TileLink.stateEnum.IN_PATH) {
-            if (startTile == null) { startTile = link.other(oTile); }
+            if (!startTile) { startTile = link.other(oTile); }
             else { break; }
         }
     }
@@ -299,9 +302,9 @@ Level.prototype.isFinished = function() {
     var tileCount = 0;
     var loopCount = 0;
     while (cur != oTile && loopCount <= this.grid.sizeX * this.grid.sizeY + 1) {
-        var neighborLinks = cur.getNeighborLinks();
-        for (var i = 0; i < neighborLinks.length; i++) {
-            var link = neighborLinks[i];
+        neighborLinks = cur.getNeighborLinks();
+        for (i = 0; i < neighborLinks.length; i++) {
+            link = neighborLinks[i];
             if (link && link.state == TileLink.stateEnum.IN_PATH) {
                 var next = link.other(cur);
                 if (next != prev) {
@@ -324,7 +327,7 @@ Level.prototype.isFinished = function() {
 
     // all conditions passed
     return true;
-}
+};
 
 Level.prototype.reset = function() {
     for (var i = 0; i < this.grid.sizeX; i++) {
@@ -339,7 +342,7 @@ Level.prototype.reset = function() {
             }
         }
     }
-}
+};
 
 Level.prototype.drawLink = function(c, linkDescriptor) {
     c.save();
@@ -389,7 +392,7 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
             if (link.tiles[0] == oTile || link.tiles[1] == oTile) {
                 var width = this.tileSize / 20;
                 c.fillStyle = "blue";
-                c.globalAlpha = 0.5
+                c.globalAlpha = 0.5;
                 c.beginPath();
                 c.rect(- this.tileSize / 2 - width / 2 + 10, -width / 2, this.tileSize + width - 20, width);
                 c.fill();
@@ -427,4 +430,4 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
     }
 
     c.restore();
-}
+};

@@ -1,3 +1,6 @@
+/*global W, H, Level, Tile, TileLinkDescriptor */
+"use strict";
+
 function getTrivialTestLevel() {
     var walls = [];
     walls.push(new TileLinkDescriptor(0, 0, Tile.directions.DOWN));
@@ -86,15 +89,15 @@ function getHardTestLevel() {
     return level;}
 
 function serializeLevel(level) {
-    levelString = "W" + level.grid.sizeX + "H" + level.grid.sizeY;
-    levelString += "+WALLS+"
+    var levelString = "W" + level.grid.sizeX + "H" + level.grid.sizeY;
+    levelString += "+WALLS+";
     var levelWalls = level.grid.getLevelWalls();
     for (var i = 0; i < levelWalls.length; i++) {
         var descr = levelWalls[i];
         levelString += descr.x + "-" + descr.y + "-" + descr.dir + "-";
     }
 
-    levelString += "+DOORS+"
+    levelString += "+DOORS+";
 
     var doors = level.grid.getDoors();
     for (var i = 0; i < doors.length; i++) {
@@ -120,9 +123,9 @@ function deserializeLevel(levelString) {
         throw new Error("Invalid level sizes");
     }
     var wallsInfo = levelString.split("+WALLS+")[1].split("+DOORS+")[0].split("-");
-    var wallsInfo = wallsInfo.slice(0, -1); // remove last empty element
+    wallsInfo = wallsInfo.slice(0, -1); // remove last empty element
     var doorsInfo = levelString.split("+WALLS+")[1].split("+DOORS+")[1].split("-");
-    var doorsInfo = doorsInfo.slice(0, -1); // remove last empty element
+    doorsInfo = doorsInfo.slice(0, -1); // remove last empty element
     var walls = [];
 
     for (var i = 0; i < wallsInfo.length; i += 3) {
