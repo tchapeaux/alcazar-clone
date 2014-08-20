@@ -46,11 +46,11 @@
 
 <script>
     var link = document.getElementById("Level_1");
-    link.onclick = function() { level = getTrivialTestLevel(); redraw(); }
+    link.onclick = function() { setLevel(getTrivialTestLevel()); }
     var link = document.getElementById("Level_2");
-    link.onclick = function() { level = getEasyTestLevel(); redraw(); }
+    link.onclick = function() { setLevel(getEasyTestLevel()); }
     var link = document.getElementById("Level_3");
-    link.onclick = function() { level = getMediumTestLevel(); redraw(); }
+    link.onclick = function() { setLevel(getMediumTestLevel()); }
 
     function toggleEditorMode() {
         editorMode = !editorMode;
@@ -69,15 +69,13 @@
         var code = load_level_code.value;
         try {
             if (code.length == 0) { throw new Error("Empty level code");}
-            level = deserializeLevel(LZString.decompressFromBase64(code));
-            level.fitCanvasDimension(W, H);
+            newLevel = deserializeLevel(LZString.decompressFromBase64(code));
             loadLevel_error.style.display = "none";
+            setLevel(newLevel);
         } catch (e) {
             var message = "Invalid level code (" + e.message + ")";
             loadLevel_error.textContent = message;
             loadLevel_error.style.display = "block";
-        } finally {
-            redraw();
         }
     }
 
@@ -91,21 +89,90 @@
 
 <div id="game">
 
+<h2 id="title_levelName"></h2>
+<h3 id="title_authorName"></h3>
+
+
 <span id="winMessage"></span><br/>
 
 <canvas width="800" height="600" onmousemove="mouseMoved(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop)" onclick="mouseClick(mouseX, mouseY);"></canvas>
 
+
+<br/>
+<button onclick="resetLevel()">Reset Level</button>
+
+<div id="editor_form">
+<h2>EDITOR MODE ENABLED</h2>
+
+<p>Click in the level to modify walls and doors.</p>
+
+<form>
+    <!-- TODO: level and author name -->
+    Width: <input type="number" name="gridWidth" id="editor_width" min="1" max="20" size="2"> |
+    Height: <input type="number" name="gridWidth" id="editor_height" min="1" max="20" size="2">
+</form>
+
+<h2>Share your level</h2>
+<p>Copy-paste the following level code: <input type="text" id="save_level_code" active="false" value=""/>
+</p>
+
+<script>
+
+    var widthInput = document.getElementById("editor_width");
+    widthInput.onchange = function() {
+        var newWidth = parseInt(widthInput.value);
+        level.resize(newWidth, level.grid.sizeY);
+        level.fitCanvasDimension(W, H);
+        redraw();
+    }
+    var heightInput = document.getElementById("editor_height");
+    heightInput.onchange = function() {
+        var newHeight = parseInt(heightInput.value);
+        level.resize(level.grid.sizeX, newHeight);
+        level.fitCanvasDimension(W, H);
+        redraw();
+    }
+
+    function populateLevelCode() {
+        save_level_code.value = LZString.compressToBase64(serializeLevel(level));
+    }
+
+</script>
+
+</div>
+
+</div>
 
 <script>
     var canvas = document.querySelector("canvas");
     canvas.onmousedown = function() {return false;}
     var c = canvas.getContext("2d");
 
+    var background_img = new Image;
+    background_img.onload = redraw;
+    background_img.src = "img/background_pattern.png";
+
     const W = canvas.width;
     const H = canvas.height;
 
     var editorMode = false;
-    var level = getEasyTestLevel()
+    var level = null;
+
+    function resetLevel() {
+        level.reset();
+        redraw();
+    }
+
+    function setLevel(newLevel) {
+       level = newLevel;
+       console.log("level is now ", level);
+       level.fitCanvasDimension(W, H);
+       title_levelName.textContent = level.name;
+       title_authorName.textContent = "By " + level.author;
+       redraw();
+    }
+
+    setLevel(getEasyTestLevel());
     level.fitCanvasDimension(W, H);
 
     function mouseMoved(newX, newY) {
@@ -192,15 +259,6 @@
         }
     }
 
-    function resetLevel() {
-        level.reset();
-        redraw();
-    }
-
-    var background_img = new Image;
-    background_img.onload = redraw;
-    background_img.src = "img/background_pattern.png";
-
     function redraw() {
         c.save();
         var pat = c.createPattern(background_img, "repeat");
@@ -231,49 +289,5 @@
     window.onload = redraw;
 
 </script>
-
-<br/>
-<button onclick="resetLevel()">Reset Level</button>
-
-<div id="editor_form">
-<h2>EDITOR MODE ENABLED</h2>
-
-<p>Click in the level to modify walls and doors.</p>
-
-<form>
-    Width: <input type="number" name="gridWidth" id="editor_width" min="1" max="20" size="2"> |
-    Height: <input type="number" name="gridWidth" id="editor_height" min="1" max="20" size="2">
-</form>
-
-<h2>Share your level</h2>
-<p>Copy-paste the following level code: <input type="text" id="save_level_code" active="false" value=""/>
-</p>
-
-<script>
-
-    var widthInput = document.getElementById("editor_width");
-    widthInput.onchange = function() {
-        var newWidth = parseInt(widthInput.value);
-        level.resize(newWidth, level.grid.sizeY);
-        level.fitCanvasDimension(W, H);
-        redraw();
-    }
-    var heightInput = document.getElementById("editor_height");
-    heightInput.onchange = function() {
-        var newHeight = parseInt(heightInput.value);
-        level.resize(level.grid.sizeX, newHeight);
-        level.fitCanvasDimension(W, H);
-        redraw();
-    }
-
-    function populateLevelCode() {
-        save_level_code.value = LZString.compressToBase64(serializeLevel(level));
-    }
-
-</script>
-
-</div>
-
-</div>
 
 </body>
