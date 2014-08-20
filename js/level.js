@@ -1,13 +1,22 @@
 /*global Grid, Tile, TileLink, TileLinkDescriptor */
 "use strict";
 
-var Level = function(sizeX, sizeY, walls, doors) {
+var Level = function(sizeX, sizeY, walls, doors, name, author) {
     /***
     walls: array of TileLinkDescriptor
     doors: array of TileLinkDescriptor
     ***/
 
+    // default parameters
+    name = typeof name !== 'undefined' ? name : "Unnamed level";
+    author = typeof author !== 'undefined' ? author : "Anonymous";
+
+    if (name.length > Level.MAX_LEVELNAME_LENGTH) { throw new Error("Level name cannot exceed 140 characters"); }
+    if (author.length > Level.MAX_AUTHORNAME_LENGTH) { throw new Error("Level author name cannot exceed 140 characters"); }
+
     this.grid = new Grid(sizeX, sizeY);
+    this.name = name;
+    this.author = author;
     this.tileSize = 50;
     this.borderWidth = 30;
 
@@ -21,6 +30,9 @@ var Level = function(sizeX, sizeY, walls, doors) {
         this.makeDoor(doors[d]);
     }
 };
+
+Level.MAX_LEVELNAME_LENGTH = 140;
+Level.MAX_AUTHORNAME_LENGTH = 140;
 
 Level.prototype.makeDoor = function(door) {
     // assert valid door position
