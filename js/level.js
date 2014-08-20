@@ -32,7 +32,7 @@ var Level = function(sizeX, sizeY, walls, doors, name, author) {
 };
 
 Level.MAX_LEVELNAME_LENGTH = 140;
-Level.MAX_AUTHORNAME_LENGTH = 140;
+Level.MAX_AUTHORNAME_LENGTH = 30;
 
 Level.prototype.makeDoor = function(door) {
     // assert valid door position

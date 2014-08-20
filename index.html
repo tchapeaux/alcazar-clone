@@ -1,6 +1,7 @@
 <!doctype html>
 <head>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="css/style.css">
     <meta charset="UTF-8">
     <link rel=icon href="img/favicon.png">
@@ -31,6 +32,7 @@
         <a id="Level_1" href="#">001 (Trivial)</a><br/>
         <a id="Level_2" href="#">002 (Easy)</a><br/>
         <a id="Level_3" href="#">003 (Alcazar Demo Level 5)</a><br/>
+        <a id="Level_4" href="#">004 (Daily Alcazar 14-08-16)</a><br/>
     </span>
 
     <h3>Load a level</h3>
@@ -51,6 +53,12 @@
     link.onclick = function() { setLevel(getEasyTestLevel()); }
     var link = document.getElementById("Level_3");
     link.onclick = function() { setLevel(getMediumTestLevel()); }
+    var link = document.getElementById("Level_4");
+    link.onclick = function() {
+        var code = "IwFgPgIghglgNgTwASgLQAYAcrgDYzADMksiSAgnAMZQBeUATmAOoDsAEpi+QDI8DKBYGHSoArKgCqABQKoQU2cFStFYQqgBMajRp4BRAGIAVdalxqF2mWAUSbE7QZNgJeo6YkXnpiAHk/ACVBMTlRG1FvDzlVf2YAOVcVVDjE0QUfMCAAA="
+        newLevel = deserializeLevel(LZString.decompressFromBase64(code));
+        setLevel(newLevel);
+    }
 
     function toggleEditorMode() {
         editorMode = !editorMode;
@@ -70,8 +78,8 @@
         try {
             if (code.length == 0) { throw new Error("Empty level code");}
             newLevel = deserializeLevel(LZString.decompressFromBase64(code));
-            loadLevel_error.style.display = "none";
             setLevel(newLevel);
+            loadLevel_error.style.display = "none";
         } catch (e) {
             var message = "Invalid level code (" + e.message + ")";
             loadLevel_error.textContent = message;
@@ -89,17 +97,20 @@
 
 <div id="game">
 
-<h2 id="title_levelName"></h2>
-<h3 id="title_authorName"></h3>
-
-
 <span id="winMessage"></span><br/>
 
 <canvas width="800" height="600" onmousemove="mouseMoved(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop)" onclick="mouseClick(mouseX, mouseY);"></canvas>
 
+<div>
+<span id="title_levelName"></span>
+<span id="title_authorName"></span>
+</div>
 
 <br/>
+
+<div>
 <button onclick="resetLevel()">Reset Level</button>
+</div>
 
 <div id="editor_form">
 <h2>EDITOR MODE ENABLED</h2>
@@ -107,7 +118,9 @@
 <p>Click in the level to modify walls and doors.</p>
 
 <form>
-    <!-- TODO: level and author name -->
+    <!-- TODO: enforce Level.MAX_AUTHORNAME_LENGTH -->
+    Level: <input type="text" name="levelname" id="levelnameinput" /> |
+    By: <input type="text" name="authorname" id="authornameinput" /><br />
     Width: <input type="number" name="gridWidth" id="editor_width" min="1" max="20" size="2"> |
     Height: <input type="number" name="gridWidth" id="editor_height" min="1" max="20" size="2">
 </form>
@@ -118,20 +131,30 @@
 
 <script>
 
-    var widthInput = document.getElementById("editor_width");
-    widthInput.onchange = function() {
-        var newWidth = parseInt(widthInput.value);
+    editor_width.onchange = function() {
+        var newWidth = parseInt(editor_width.value);
         level.resize(newWidth, level.grid.sizeY);
         level.fitCanvasDimension(W, H);
         redraw();
-    }
-    var heightInput = document.getElementById("editor_height");
-    heightInput.onchange = function() {
-        var newHeight = parseInt(heightInput.value);
+    };
+    editor_height.onchange = function() {
+        var newHeight = parseInt(editor_height.value);
         level.resize(level.grid.sizeX, newHeight);
         level.fitCanvasDimension(W, H);
         redraw();
-    }
+    };
+    levelnameinput.onchange = function() {
+        var newName = levelnameinput.value;
+        level.name = newName;
+        setLevel(level);
+        populateLevelCode();
+    };
+    authornameinput.onchange = function() {
+        var newName = authornameinput.value;
+        level.author = newName;
+        setLevel(level);
+        populateLevelCode();
+    };
 
     function populateLevelCode() {
         save_level_code.value = LZString.compressToBase64(serializeLevel(level));
@@ -165,10 +188,11 @@
 
     function setLevel(newLevel) {
        level = newLevel;
-       console.log("level is now ", level);
        level.fitCanvasDimension(W, H);
-       title_levelName.textContent = level.name;
+       title_levelName.textContent = "Level: " + level.name;
+       levelnameinput.value = level.name;
        title_authorName.textContent = "By " + level.author;
+       authornameinput.value = level.author;
        redraw();
     }
 

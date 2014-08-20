@@ -24,6 +24,21 @@
         box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     }
 
+    #game #title_levelName {
+        font-family: 'Lobster', cursive;
+        color: #221900;
+        font-size: 30pt;
+        margin: 10px;
+        padding: 10px;
+    }
+
+    #game #title_authorName {
+        color: #221900;
+        font-size: 18pt;
+        margin: 10px;
+        padding: 10px;
+    }
+
     #ui {
         position: fixed;
         font-size: 11pt;
@@ -56,6 +71,7 @@
     }
 
     #ui input {
+        margin: 3px;
         border:2px solid #7b6825;
         font-size: 12pt;
         color: black;
@@ -66,7 +82,6 @@
     #ui h3 {
         margin-bottom: 2px;
         padding-bottom: 2px;
-        /*border: 1px solid red;*/
     }
 
     #ui #loadLevel_error {
@@ -79,7 +94,7 @@
         font-size: 12pt;
         font-weight: bold;
     }
-    #editor_form input[type=number] {
+    #editor_form input {
         padding:5px;
         border:2px solid #221900;
         font-size: 12pt;
