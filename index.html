@@ -99,7 +99,12 @@
 
 <span id="winMessage"></span><br/>
 
-<canvas width="800" height="600" onmousemove="mouseMoved(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop)" onclick="mouseClick(mouseX, mouseY);"></canvas>
+<canvas width="800" height="600"
+onmouseleave="mouseLeave()"
+onmousedown="mouseDown(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop); return false;"
+onmousemove="mouseMoved(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop)"
+onclick="mouseClick(mouseX, mouseY);"
+></canvas>
 
 <div>
 <span id="title_levelName"></span>
@@ -168,8 +173,15 @@
 
 <script>
     var canvas = document.querySelector("canvas");
-    canvas.onmousedown = function() {return false;}
+    //canvas.onmousedown = function() {return false;}
     var c = canvas.getContext("2d");
+
+    // new variables used for drawing lines and remembering the points positions
+    var painting = false;
+    var clickX = new Array();
+    var clickY = new Array();
+    var clickDrag = new Array();
+
 
     var background_img = new Image;
     background_img.onload = redraw;
@@ -202,80 +214,111 @@
     function mouseMoved(newX, newY) {
         mouseX = newX;
         mouseY = newY;
-        // highlight closest link
-        x = mouseX - W / 2;
-        y = mouseY - H / 2;
-        var linkDescr = level.getClosestLink(x, y);
-        if (linkDescr) {
-            var link = level.grid.getLink(linkDescr);
-            if (link) {
-                link.highlighted = true;
-            }
-        }
-        redraw();
-    }
 
-    function mouseClick(x, y) {
-        // apply offset to mouse position
-        x -= W / 2;
-        y -= H / 2;
-        var linkDescr = level.getClosestLink(x, y);
-        if (!editorMode) {
+        if (painting) {
+            addClick(newX, newY, true);
+        } else {
+            // highlight closest link
+            var x = mouseX - W / 2;
+            var y = mouseY - H / 2;
+            //console.log("X = " + x + "; Y = " + y);
+            var linkDescr = level.getClosestLink(x, y);
             if (linkDescr) {
                 var link = level.grid.getLink(linkDescr);
                 if (link) {
-                    switch (link.state) {
-                        case TileLink.stateEnum.CLEAR:
-                            link.state = TileLink.stateEnum.IN_PATH;
-                            break;
-                        case TileLink.stateEnum.IN_PATH:
-                            link.state = TileLink.stateEnum.USER_WALL;
-                            break;
-                        case TileLink.stateEnum.USER_WALL:
-                            link.state = TileLink.stateEnum.CLEAR;
-                            break;
-                    }
-                    link.highlighted = true;
-                }
+                link.highlighted = true;
             }
         }
-        else { // editorMode
-            var link = null;
-            if (linkDescr) { link = level.grid.getLink(linkDescr); }
+    }
+        redraw();
+    }
 
-            if (link && !link.isDoor()) { // level wall toggling
-                switch (link.state) {
-                    case TileLink.stateEnum.CLEAR:
-                        link.state = TileLink.stateEnum.LEVEL_WALL;
-                        break;
-                    case TileLink.stateEnum.LEVEL_WALL:
-                        link.state = TileLink.stateEnum.CLEAR;
-                        break;
+    function mouseDown(newX, newY) {
+        if (!editorMode) {
+            painting = true;
+            addClick(newX, newY, false);
+            redraw();
+        }
+    }
+
+    function mouseUp() {
+        painting = false;
+        computeLines();
+        redraw();
+    }
+
+    function mouseLeave() {
+        if (!editorMode) {
+            painting = false;
+            computeLines();
+            redraw();
+        }
+    }
+
+    function mouseClick(x, y) {
+        // We first check if the click was the end of a 'click&move' (handled elsewhere)
+        // If it is not, we apply 'single click' behavior
+        var was_drawing = (clickX.length > 2);
+        mouseUp();
+        if(!was_drawing)
+        {
+            // apply offset to mouse position
+            x -= W / 2;
+            y -= H / 2;
+            var linkDescr = level.getClosestLink(x, y);
+            if (!editorMode) {
+                if (linkDescr) {
+                    var link = level.grid.getLink(linkDescr);
+                    if (link) {
+                        switch (link.state) {
+                            case TileLink.stateEnum.CLEAR:
+                                link.state = TileLink.stateEnum.IN_PATH;
+                            break;
+                            case TileLink.stateEnum.IN_PATH:
+                                link.state = TileLink.stateEnum.USER_WALL;
+                            break;
+                            case TileLink.stateEnum.USER_WALL:
+                                link.state = TileLink.stateEnum.CLEAR;
+                            break;
+                        }
+                        link.highlighted = true;
+                    }
                 }
-            } else { // door toggling
-                if (!link) {
-                    if (linkDescr) {
-                        level.makeDoor(linkDescr);
-                    } else {
-                        var doorDescr = level.getClosestDoorPosition(x, y);
-                        // check if door already exists
-                        var doorLink = level.grid.getLink(doorDescr);
-                        if (doorLink) {
-                            level.removeDoor(doorDescr);
+            } else { // editorMode
+                var link = null;
+                if (linkDescr) { link = level.grid.getLink(linkDescr); }
+                    if (link && !link.isDoor()) { // level wall toggling
+                        switch (link.state) {
+                            case TileLink.stateEnum.CLEAR:
+                                link.state = TileLink.stateEnum.LEVEL_WALL;
+                            break;
+                            case TileLink.stateEnum.LEVEL_WALL:
+                                link.state = TileLink.stateEnum.CLEAR;
+                            break;
+                        }
+                    } else { // door toggling
+                        if (!link) {
+                            if (linkDescr) {
+                                level.makeDoor(linkDescr);
+                            } else {
+                                var doorDescr = level.getClosestDoorPosition(x, y);
+                                // check if the door already exists
+                                var doorLink = level.grid.getLink(doorDescr);
+                                if (doorLink) {
+                                    level.removeDoor(doorDescr);
+                                } else {
+                                    level.makeDoor(doorDescr);
+                                }
+                            }
                         } else {
-                            level.makeDoor(doorDescr);
+                            // assert link is door (should be enforced earlier)
+                            if (!link.isDoor()) { throw new Error("Invalid door position"); }
+                            level.removeDoor(linkDescr);
                         }
                     }
-                } else {
-                    // assert link is door (should be enforced earlier)
-                    if (!link.isDoor()) { throw new Error("Invalid door position"); }
-                    level.removeDoor(linkDescr);
-                }
             }
         }
-
         redraw();
-
         if (level.isFinished()) {
             winMessage.textContent = "You win !";
         } else {
@@ -285,14 +328,15 @@
 
     function redraw() {
         c.save();
-        var pat = c.createPattern(background_img, "repeat");
+
         c.save();
-        c.fillStyle = pat;
+        c.fillStyle = c.createPattern(background_img, "repeat");
         c.setLineDash([]);
         c.beginPath();
         c.rect(0, 0, W, H);
         c.fill();
         c.restore();
+
         if (editorMode) {
             c.save()
             c.fillStyle = "rgb(100, 100, 100)";
@@ -308,6 +352,217 @@
 
         c.restore();
         populateLevelCode();
+
+        redrawLines();
+    }
+
+    function computeLines()
+    {
+        // todo : check every click and match them with the borders
+        var found_borders = new Array();
+
+        var rel_previous_x = 0;
+        var rel_previous_y = 0;
+        var linkDescr = {x : 0, y : 0, dir : Tile.directions.TOP};
+        var doors = level.grid.getDoors();
+        for(var i = 0; i < clickX.length; i++) {
+            //console.log("X = " + clickX[i] + "; Y = " + clickY[i]);
+            var posx = clickX[i] - W / 2;
+            var posy = clickY[i] - H / 2;
+
+            //var linkDescr = level.getClosestLink(linkx, linky);
+
+            // this part is pretty ugly, but I don't want to change your js files
+            var nbtiles_x = level.grid.sizeX;
+            var nbtiles_y = level.grid.sizeY;
+            var width_board = nbtiles_x * level.tileSize;
+            var height_board = nbtiles_y * level.tileSize;
+            var middle_x = width_board / 2;
+            var middle_y = height_board / 2;
+
+            var crossed_line = false;
+
+            var relative_position_x = posx + middle_x;
+            var relative_position_y = posy + middle_y;
+            //var relative_link_x = level.tileSize * linkDescr.x;
+            //var relative_link_y = level.tileSize * linkDescr.y;
+
+            if(i == 0)
+            {
+                rel_previous_x = relative_position_x;
+                rel_previous_y = relative_position_y;
+            }
+
+            // check for doors
+            for(var doori = 0; doori < doors.length; doori++)
+            {
+                var curr_door = doors[doori];
+                var crossing = false;
+                var borderx = curr_door.x * level.tileSize;
+                var bordery = curr_door.y * level.tileSize;
+                var borderx2 = borderx;// +  level.tileSize;
+                var bordery2 = bordery;// +  level.tileSize;
+
+                switch(curr_door.dir){
+                    case Tile.directions.UP:
+                        borderx2 += level.tileSize;
+                    break;
+                    case Tile.directions.DOWN:
+                        bordery += level.tileSize;
+                        bordery2 += level.tileSize;
+                        borderx2 += level.tileSize;
+                    break;
+                    case Tile.directions.LEFT:
+                        bordery2 += level.tileSize;
+                    break;
+                    case Tile.directions.RIGHT:
+                        borderx += level.tileSize;
+                        borderx2 += level.tileSize;
+                        bordery2 += level.tileSize;
+                    break;
+                }
+                crossing = lineIntersect(
+                        borderx ,  bordery, borderx2, bordery2, // line 1 : border
+                        relative_position_x, relative_position_y, rel_previous_x, rel_previous_y // line 2 : points
+                    );
+                if(crossing)
+                {
+                    console.log("crossed door");
+                    console.log(curr_door);
+                    var link = level.grid.getLink(curr_door);
+                    link.state = TileLink.stateEnum.IN_PATH;
+                }
+            }
+
+            // check for left and top borders of each tile
+            for(var w = 0; w < nbtiles_x; w++)
+            {
+                for(var h = 0; h < nbtiles_y; h++)
+                {
+                    linkDescr.x = w;
+                    linkDescr.y = h;
+                    var borderx = linkDescr.x * level.tileSize;
+                    var bordery = linkDescr.y * level.tileSize;
+                    var crossing_top = lineIntersect(borderx,  bordery, borderx + level.tileSize, bordery, // line 1 : top border
+                                    relative_position_x, relative_position_y, rel_previous_x, rel_previous_y // line 2 : between the two last points
+                    );
+                    if(crossing_top)
+                    {
+                        // I went for left and top but top is not working, don't ask me why, so here is a correction for down
+                        linkDescr.dir = Tile.directions.DOWN;
+                        if(linkDescr.y > 0)
+                        {
+                            linkDescr.y--;
+                            var link = level.grid.getLink(linkDescr);
+                            if(link && found_borders.indexOf(link) == -1)
+                            {
+                                console.log('top');
+                                found_borders.push(link);
+                            }
+                        }
+                    }
+
+
+                    var crossing_left = lineIntersect(
+                        // line 1 : left border
+                        borderx, bordery,
+                        borderx, bordery + level.tileSize,
+                        // line 2 : between the two last points
+                        relative_position_x, relative_position_y,
+                        rel_previous_x, rel_previous_y
+                    );
+                    if (crossing_left)
+                    {
+                        linkDescr.dir = Tile.directions.LEFT;
+                        var link = level.grid.getLink(linkDescr);
+                        if(link && found_borders.indexOf(link) == -1)
+                        {
+                            //~ console.log('left');
+                            //~ console.log("Border = " + borderx + ";" + bordery);
+                            //~ console.log("Point = " + relative_position_x + ";" + relative_position_y);
+                            found_borders.push(link);
+                        }
+                    }
+                }
+            }
+
+
+            rel_previous_x = relative_position_x;
+            rel_previous_y = relative_position_y;
+        }
+        // console.log("Size = " + found_borders.length);
+        for(var i = 0; i < found_borders.length; i++) {
+            var link =  found_borders[i];
+            if (link) {
+                switch (link.state) {
+                    case TileLink.stateEnum.CLEAR:
+                        link.state = TileLink.stateEnum.IN_PATH;
+                        break;
+                    //~ case TileLink.stateEnum.IN_PATH:
+                    //~ case TileLink.stateEnum.USER_WALL:
+                        //~ link.state = TileLink.stateEnum.CLEAR;
+                        //~ break;
+                }
+                link.highlighted = true;
+            }
+        }
+        cleanLines();
+    }
+
+    function cleanLines()
+    {
+        clickX = new Array();
+        clickY = new Array();
+        clickDrag = new Array();
+    }
+
+    function addClick(x, y, dragging)
+    {
+        clickX.push(x);
+        clickY.push(y);
+        clickDrag.push(dragging);
+    }
+
+function lineIntersect(p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y) {
+
+    var s1_x, s1_y, s2_x, s2_y;
+    s1_x = p1_x - p0_x;
+    s1_y = p1_y - p0_y;
+    s2_x = p3_x - p2_x;
+    s2_y = p3_y - p2_y;
+
+    var s, t;
+    s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
+    t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
+
+    if (s >= 0 && s <= 1 && t >= 0 && t <= 1)
+    {
+        // Collision detected
+        return 1;
+    }
+
+    return 0; // No collision
+}
+
+    function redrawLines()
+    {
+        c.strokeStyle = "#FF0000";
+        c.lineJoin = "round";
+        c.lineWidth = 8;
+
+        for(var i=0; i < clickX.length; i++) {
+            c.beginPath();
+            if(clickDrag[i] && i){
+                //~ c.fillRect(clickX[i-1],clickY[i-1], 10, 10);
+                c.moveTo(clickX[i-1], clickY[i-1]);
+            }else{
+                c.moveTo(clickX[i]-1, clickY[i]);
+                //~ c.fillRect(clickX[i] - 1,clickY[i], 10, 10);
+            }
+            c.lineTo(clickX[i], clickY[i]);
+            c.closePath();
+            c.stroke();
+        }
     }
 
     window.onload = redraw;
