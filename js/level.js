@@ -8,8 +8,8 @@ var Level = function(sizeX, sizeY, walls, doors, name, author) {
     ***/
 
     // default parameters
-    name = typeof name !== 'undefined' ? name : "Unnamed level";
-    author = typeof author !== 'undefined' ? author : "Anonymous";
+    name = typeof name !== "undefined" ? name : "Unnamed level";
+    author = typeof author !== "undefined" ? author : "Anonymous";
 
     if (name.length > Level.MAX_LEVELNAME_LENGTH) { throw new Error("Level name cannot exceed 140 characters"); }
     if (author.length > Level.MAX_AUTHORNAME_LENGTH) { throw new Error("Level author name cannot exceed 140 characters"); }
@@ -387,13 +387,14 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
             c.rotate(Math.PI/2);
     }
 
+    var width, length;
     switch (link.state) {
         case TileLink.stateEnum.LEVEL_WALL:
             c.strokeStyle = "black";
             c.fillStyle = "grey";
             c.setLineDash([]);
-            var width = this.tileSize / 5;
-            var length = this.tileSize - width;
+            width = this.tileSize / 5;
+            length = this.tileSize - width;
             c.beginPath();
             c.rect(- width / 2, -length / 2, width, length);
             c.fill();
@@ -402,7 +403,7 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
         case TileLink.stateEnum.CLEAR:
             var oTile = this.grid.outerTile;
             if (link.tiles[0] == oTile || link.tiles[1] == oTile) {
-                var width = this.tileSize / 20;
+                width = this.tileSize / 20;
                 c.fillStyle = "blue";
                 c.globalAlpha = 0.5;
                 c.beginPath();
@@ -411,7 +412,7 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
             }
             break;
         case TileLink.stateEnum.IN_PATH:
-            var width = this.tileSize / 5;
+            width = this.tileSize / 5;
             c.fillStyle = "blue";
             c.beginPath();
             c.rect(- this.tileSize / 2 - width / 2, -width / 2, this.tileSize + width, width);
@@ -421,8 +422,8 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
             c.strokeStyle = "black";
             c.fillStyle = "rgb(100, 100, 200)";
             c.setLineDash([]);
-            var width = this.tileSize / 10;
-            var length = this.tileSize * 0.7;
+            width = this.tileSize / 10;
+            length = this.tileSize * 0.7;
             c.beginPath();
             c.rect(- width / 2, -length / 2, width, length);
             c.fill();
