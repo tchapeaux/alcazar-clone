@@ -172,10 +172,10 @@ LinePainter.prototype.computeLines = function ()
                 case TileLink.stateEnum.CLEAR:
                     link.state = TileLink.stateEnum.IN_PATH;
                     break;
-                //~ case TileLink.stateEnum.IN_PATH:
-                //~ case TileLink.stateEnum.USER_WALL:
-                    //~ link.state = TileLink.stateEnum.CLEAR;
-                    //~ break;
+                case TileLink.stateEnum.IN_PATH:
+                case TileLink.stateEnum.USER_WALL:
+                    link.state = TileLink.stateEnum.CLEAR;
+                    break;
             }
             link.highlighted = true;
         }
