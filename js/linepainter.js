@@ -27,7 +27,6 @@ LinePainter.prototype.cleanLines = function()
 
 LinePainter.prototype.computeLines = function ()
 {
-    // todo : check every click and match them with the borders
     var found_borders = [];
 
     var rel_previous_x = 0;
