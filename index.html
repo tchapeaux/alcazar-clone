@@ -49,17 +49,17 @@
 
 <script>
     var link = document.getElementById("Level_1");
-    link.onclick = function() { setLevel(getTrivialTestLevel()); }
-    var link = document.getElementById("Level_2");
-    link.onclick = function() { setLevel(getEasyTestLevel()); }
-    var link = document.getElementById("Level_3");
-    link.onclick = function() { setLevel(getMediumTestLevel()); }
-    var link = document.getElementById("Level_4");
+    link.onclick = function() { setLevel(getTrivialTestLevel()); };
+    link = document.getElementById("Level_2");
+    link.onclick = function() { setLevel(getEasyTestLevel()); };
+    link = document.getElementById("Level_3");
+    link.onclick = function() { setLevel(getMediumTestLevel()); };
+    link = document.getElementById("Level_4");
     link.onclick = function() {
-        var code = "IwFgPgIghglgNgTwASgLQAYAcrgDYzADMksiSAgnAMZQBeUATmAOoDsAEpi+QDI8DKBYGHSoArKgCqABQKoQU2cFStFYQqgBMajRp4BRAGIAVdalxqF2mWAUSbE7QZNgJeo6YkXnpiAHk/ACVBMTlRG1FvDzlVf2YAOVcVVDjE0QUfMCAAA="
+        var code = "IwFgPgIghglgNgTwASgLQAYAcrgDYzADMksiSAgnAMZQBeUATmAOoDsAEpi+QDI8DKBYGHSoArKgCqABQKoQU2cFStFYQqgBMajRp4BRAGIAVdalxqF2mWAUSbE7QZNgJeo6YkXnpiAHk/ACVBMTlRG1FvDzlVf2YAOVcVVDjE0QUfMCAAA=";
         newLevel = deserializeLevel(LZString.decompressFromBase64(code));
         setLevel(newLevel);
-    }
+    };
 
     function toggleEditorMode() {
         editorMode = !editorMode;
@@ -77,7 +77,7 @@
     function loadLevelCode() {
         var code = load_level_code.value;
         try {
-            if (code.length == 0) { throw new Error("Empty level code");}
+            if (code.length === 0) { throw new Error("Empty level code");}
             newLevel = deserializeLevel(LZString.decompressFromBase64(code));
             setLevel(newLevel);
             loadLevel_error.style.display = "none";
@@ -90,7 +90,7 @@
 
     loadLevel_error.onclick = function() {
         loadLevel_error.style.display = "none";
-    }
+    };
 
     var link = document.getElementById("LevelEditor");
     link.onclick = toggleEditorMode;
@@ -336,13 +336,13 @@ onclick="mouseClick(mouseX, mouseY);"
         c.restore();
 
         if (editorMode) {
-            c.save()
+            c.save();
             c.fillStyle = "rgb(100, 100, 100)";
             c.globalAlpha = 0.5;
             c.beginPath();
             c.rect(0, 0, W, H);
             c.fill();
-            c.restore()
+            c.restore();
         }
 
         c.translate(W / 2, H / 2);
