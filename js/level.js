@@ -150,11 +150,7 @@ Level.prototype.draw = function(c) {
     }
     c.fill();
 
-    // highlight completed tiles (exactly two links in path)
-    c.save();
-    c.fillStyle = "blue";
-    c.globalAlpha = "0.3";
-    c.beginPath();
+    // color tile background based on the number of links in the path
     for (i = 0; i < this.grid.sizeX; i++) {
         for (j = 0; j < this.grid.sizeY; j++) {
             var tile = this.grid.getTile(i, j);
@@ -167,12 +163,27 @@ Level.prototype.draw = function(c) {
                 }
             }
             if (pathLinkCount == 2) {
+                // 2 links in the path: blue tile
+                c.save();
+                c.fillStyle = "blue";
+                c.globalAlpha = "0.3";
+                c.beginPath();
                 c.rect(i * this.tileSize, j * this.tileSize, this.tileSize, this.tileSize);
+                c.fill();
+                c.restore();
+            }
+            if (pathLinkCount > 2) {
+                // more than 2 links in the path: red tile (invalid)
+                c.save();
+                c.fillStyle = "red";
+                c.globalAlpha = "0.5";
+                c.beginPath();
+                c.rect(i * this.tileSize, j * this.tileSize, this.tileSize, this.tileSize);
+                c.fill();
+                c.restore();
             }
         }
     }
-    c.fill();
-    c.restore();
 
     // draw tile separation lines
     c.strokeStyle = "black";
