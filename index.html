@@ -107,6 +107,11 @@ onmousemove="mouseMoved(event.pageX - this.offsetLeft + document.documentElement
 onclick="mouseClick(mouseX, mouseY);"
 ></canvas>
 
+<div id="controls">
+    <button onclick="clearLevel()">Clear</button>
+    <button onclick="lockLevel()">Lock</button>
+</div>
+
 <div>
 <span id="title_levelName"></span>
 <span id="title_authorName"></span>
@@ -194,7 +199,7 @@ onclick="mouseClick(mouseX, mouseY);"
     function resetLevel() {
         level.reset();
         redraw();
-    }
+    };
 
     function setLevel(newLevel) {
        level = newLevel;
@@ -205,7 +210,17 @@ onclick="mouseClick(mouseX, mouseY);"
        title_authorName.textContent = "By " + level.author;
        authornameinput.value = level.author;
        redraw();
-    }
+    };
+
+    function lockLevel() {
+        level.lock();
+        redraw();
+    };
+
+    function clearLevel() {
+        level.clear();
+        redraw();
+    };
 
     setLevel(getEasyTestLevel());
 
@@ -267,7 +282,7 @@ onclick="mouseClick(mouseX, mouseY);"
             if (!editorMode) {
                 if (linkDescr) {
                     var link = level.grid.getLink(linkDescr);
-                    if (link) {
+                    if (link && link.lockLevel < 1) {
                         switch (link.state) {
                             case TileLink.stateEnum.CLEAR:
                                 link.state = TileLink.stateEnum.IN_PATH;

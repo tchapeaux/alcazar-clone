@@ -166,7 +166,7 @@ LinePainter.prototype.computeLines = function ()
     // console.log("Size = " + found_borders.length);
     for(var i = 0; i < found_borders.length; i++) {
         var link =  found_borders[i];
-        if (link) {
+        if (link && link.lockLevel < 1) {
             switch (link.state) {
                 case TileLink.stateEnum.CLEAR:
                     link.state = TileLink.stateEnum.IN_PATH;

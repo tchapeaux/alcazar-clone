@@ -32,6 +32,10 @@
         padding: 10px;
     }
 
+    #game #controls {
+        font-size: 30pt;
+    }
+
     #game #title_authorName {
         color: #221900;
         font-size: 18pt;

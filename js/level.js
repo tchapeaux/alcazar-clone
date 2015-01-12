@@ -367,6 +367,61 @@ Level.prototype.reset = function() {
     }
 };
 
+
+Level.prototype.clear = function() {
+    // clear is like reset but it conserves locked links
+    for (var i = 0; i < this.grid.sizeX; i++) {
+        for (var j = 0; j < this.grid.sizeY; j++) {
+            var tile = this.grid.getTile(i, j);
+            var neighborLinks = tile.getNeighborLinks();
+            for (var d = 0; d < neighborLinks.length; d++) {
+                var link = neighborLinks[d];
+                if (link &&
+                    link.state != TileLink.stateEnum.LEVEL_WALL &&
+                    link.lockLevel === 0)
+                {
+                    link.state = TileLink.stateEnum.CLEAR;
+                }
+            }
+        }
+    }
+};
+
+Level.prototype.lock = function() {
+    var i, j, d, tile, neighborLinks, link;
+    var foundLockableLinks = false;
+    for (i = 0; i < this.grid.sizeX; i++) {
+        for (j = 0; j < this.grid.sizeY; j++) {
+            tile = this.grid.getTile(i, j);
+            neighborLinks = tile.getNeighborLinks();
+            for (d = 0; d < neighborLinks.length; d++) {
+                link = neighborLinks[d];
+                if (link && link.lockLevel === 0 &&
+                    (link.state == TileLink.stateEnum.USER_WALL || link.state == TileLink.stateEnum.IN_PATH)) {
+                    link.lockLevel = link.lockLevel + 1;
+                    foundLockableLinks = true;
+                }
+            }
+        }
+    }
+    if (foundLockableLinks) {
+        return;
+    }
+    // if no link is locked, then unlock all links
+    for (i = 0; i < this.grid.sizeX; i++) {
+        for (j = 0; j < this.grid.sizeY; j++) {
+            tile = this.grid.getTile(i, j);
+            neighborLinks = tile.getNeighborLinks();
+            for (d = 0; d < neighborLinks.length; d++) {
+                link = neighborLinks[d];
+                if (link) {
+                    link.lockLevel = 0;
+                }
+            }
+        }
+    }
+};
+
 Level.prototype.drawLink = function(c, linkDescriptor) {
     c.save();
 
@@ -399,6 +454,10 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
     }
 
     var width, length;
+    var defaultColor = "blue";
+    if (link.lockLevel > 0) {
+        defaultColor = "#221900";
+    }
     switch (link.state) {
         case TileLink.stateEnum.LEVEL_WALL:
             c.strokeStyle = "black";
@@ -415,7 +474,7 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
             var oTile = this.grid.outerTile;
             if (link.tiles[0] == oTile || link.tiles[1] == oTile) {
                 width = this.tileSize / 20;
-                c.fillStyle = "blue";
+                c.fillStyle = defaultColor;
                 c.globalAlpha = 0.5;
                 c.beginPath();
                 c.rect(- this.tileSize / 2 - width / 2 + 10, -width / 2, this.tileSize + width - 20, width);
@@ -424,14 +483,14 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
             break;
         case TileLink.stateEnum.IN_PATH:
             width = this.tileSize / 5;
-            c.fillStyle = "blue";
+            c.fillStyle = defaultColor;
             c.beginPath();
             c.rect(- this.tileSize / 2 - width / 2, -width / 2, this.tileSize + width, width);
             c.fill();
             break;
         case TileLink.stateEnum.USER_WALL:
             c.strokeStyle = "black";
-            c.fillStyle = "rgb(100, 100, 200)";
+            c.fillStyle = defaultColor;
             c.setLineDash([]);
             width = this.tileSize / 10;
             length = this.tileSize * 0.7;

@@ -32,6 +32,7 @@ Tile.prototype.getNeighborLinks = function() {
 var TileLink = function(tile1, tile2) {
     this.tiles = [tile1, tile2];
     this.state = TileLink.stateEnum.CLEAR;
+    this.lockLevel = 0;
     this.highlighted = false;
 };
 
