@@ -29,7 +29,7 @@ Tile.prototype.getNeighborLinks = function() {
     return links;
 };
 
-Tile.prototype.getNeighorPaths = function() {
+Tile.prototype.getNeighborPaths = function() {
     var links = this.getNeighborLinks();
     var paths = [];
     for (var i = links.length - 1; i >= 0; i--) {
@@ -40,17 +40,29 @@ Tile.prototype.getNeighorPaths = function() {
     return paths;
 };
 
-Tile.prototype.getNeighorWalls = function() {
+Tile.prototype.getNeighborWalls = function() {
+    // BEWARE this does not return borders
     var links = this.getNeighborLinks();
     var paths = [];
     for (var i = links.length - 1; i >= 0; i--) {
-        if (links[i].state == TileLink.stateEnum.USER_WALL || links[i].state == TileLink.stateEnum.LEVEL_WALL) {
+        if (links[i].state == TileLink.stateEnum.USER_WALL ||
+            links[i].state == TileLink.stateEnum.LEVEL_WALL) {
             paths.push(links[i]);
         }
     }
     return paths;
 };
 
+Tile.prototype.getNeighborClears = function() {
+    var links = this.getNeighborLinks();
+    var clears = [];
+    for (var i = links.length - 1; i >= 0; i--) {
+        if (links[i].state == TileLink.stateEnum.CLEAR) {
+            clears.push(links[i]);
+        }
+    }
+    return clears;
+};
 
 var TileLink = function(tile1, tile2) {
     this.tiles = [tile1, tile2];
