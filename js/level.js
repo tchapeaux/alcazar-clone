@@ -154,14 +154,7 @@ Level.prototype.draw = function(c) {
     for (i = 0; i < this.grid.sizeX; i++) {
         for (j = 0; j < this.grid.sizeY; j++) {
             var tile = this.grid.getTile(i, j);
-            var pathLinkCount = 0;
-            var neighborLinks = tile.getNeighborLinks();
-            for (var d = 0; d < neighborLinks.length; d++) {
-                var link = neighborLinks[d];
-                if (link && link.state == TileLink.stateEnum.IN_PATH) {
-                    pathLinkCount++;
-                }
-            }
+            var pathLinkCount = tile.getNeighborPaths().length;
             if (pathLinkCount == 2) {
                 // 2 links in the path: blue tile
                 c.save();
@@ -408,6 +401,7 @@ Level.prototype.lock = function() {
         return;
     }
     // if no link is locked, then unlock all links
+    // this should be a different function (and handled at a higher level)
     for (i = 0; i < this.grid.sizeX; i++) {
         for (j = 0; j < this.grid.sizeY; j++) {
             tile = this.grid.getTile(i, j);
