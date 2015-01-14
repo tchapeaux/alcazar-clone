@@ -29,6 +29,29 @@ Tile.prototype.getNeighborLinks = function() {
     return links;
 };
 
+Tile.prototype.getNeighorPaths = function() {
+    var links = this.getNeighborLinks();
+    var paths = [];
+    for (var i = links.length - 1; i >= 0; i--) {
+        if (links[i].state == TileLink.stateEnum.IN_PATH) {
+            paths.push(links[i]);
+        }
+    }
+    return paths;
+};
+
+Tile.prototype.getNeighorWalls = function() {
+    var links = this.getNeighborLinks();
+    var paths = [];
+    for (var i = links.length - 1; i >= 0; i--) {
+        if (links[i].state == TileLink.stateEnum.USER_WALL || links[i].state == TileLink.stateEnum.LEVEL_WALL) {
+            paths.push(links[i]);
+        }
+    }
+    return paths;
+};
+
+
 var TileLink = function(tile1, tile2) {
     this.tiles = [tile1, tile2];
     this.state = TileLink.stateEnum.CLEAR;
