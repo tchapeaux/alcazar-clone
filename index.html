@@ -14,6 +14,7 @@
 <script src="js/level.js"></script>
 <script src="js/levels.js"></script>
 <script src="js/linepainter.js"></script>
+<script src="js/alcazarai.js"></script>
 <script src="thirdparty/lzstring/lzstring.js"></script>
 
 <body>
@@ -110,6 +111,7 @@ onclick="mouseClick(mouseX, mouseY);"
 <div id="controls">
     <button onclick="clearLevel()">Clear</button>
     <button onclick="lockLevel()">Lock</button>
+    <button onclick="cheatLevel()">Cheat (very basic)</button>
 </div>
 
 <div>
@@ -221,6 +223,12 @@ onclick="mouseClick(mouseX, mouseY);"
         level.clear();
         redraw();
     };
+
+    function cheatLevel() {
+        var solver = new AlcazarAI(level);
+        solver.solve();
+        redraw();
+    }
 
     setLevel(getEasyTestLevel());
 
