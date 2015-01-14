@@ -35,6 +35,7 @@
         <a id="Level_2" href="#">002 (Easy)</a><br/>
         <a id="Level_3" href="#">003 (Alcazar Demo Level 5)</a><br/>
         <a id="Level_4" href="#">004 (Daily Alcazar 14-08-16)</a><br/>
+        <a id="Level_5" href="#">005 (Ball Room 01)</a>
     </span>
 
     <h3>Load a level</h3>
@@ -58,6 +59,12 @@
     link = document.getElementById("Level_4");
     link.onclick = function() {
         var code = "IwFgPgIghglgNgTwASgLQAYAcrgDYzADMksiSAgnAMZQBeUATmAOoDsAEpi+QDI8DKBYGHSoArKgCqABQKoQU2cFStFYQqgBMajRp4BRAGIAVdalxqF2mWAUSbE7QZNgJeo6YkXnpiAHk/ACVBMTlRG1FvDzlVf2YAOVcVVDjE0QUfMCAAA=";
+        newLevel = deserializeLevel(LZString.decompressFromBase64(code));
+        setLevel(newLevel);
+    };
+    link = document.getElementById("Level_5");
+    link.onclick = function() {
+        var code = "IwFgPgQghgNjAEAlA9sgtvAtPADMMwAbGAIIwDGUAXlAE7zIBmjAluS7GAOoAcAEsABM3EgBlRAZQIBOMDkwB2TAFUACgUzBMogKIAxACobp2/UcGYLuw2ADMllevshTN+z1dGXL618wffMBdgeUDgrTUwAFZNT2jFOJiTSMJMVMDUpUilULMwJRdstMcwABEAeXLEKQUwC3kihvUlC0QASQBxPiMlYC0KrgA5Os1+8qG7UcwB4fDp8eGgA=";
         newLevel = deserializeLevel(LZString.decompressFromBase64(code));
         setLevel(newLevel);
     };
