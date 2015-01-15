@@ -112,7 +112,7 @@
 onmouseleave="mouseLeave()"
 onmousedown="mouseDown(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop); return false;"
 onmousemove="mouseMoved(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop)"
-onclick="mouseClick(mouseX, mouseY);"
+onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop); return false;"
 ></canvas>
 
 <div id="controls">
@@ -269,10 +269,28 @@ onclick="mouseClick(mouseX, mouseY);"
         }
     }
 
-    function mouseUp() {
+    function checkVictory()
+    {
+        if (level.isFinished()) {
+            winMessage.textContent = "You win !";
+        } else {
+            winMessage.textContent = "";
+        }
+    }
+
+    function mouseUp(x, y) {
         painting = false;
-        painter.computeLines();
+        // We first check if the click was the end of a 'click&move' (handled elsewhere)
+        // If it is not, we apply 'single click' behavior
+        var was_drawing = (painter.clickX.length > 2);
+        if(was_drawing)
+            painter.computeLines();
+        else{
+            painter.cleanLines();
+            clickEvent(x, y);
+        }
         redraw();
+        checkVictory();
     }
 
     function mouseLeave() {
@@ -282,76 +300,68 @@ onclick="mouseClick(mouseX, mouseY);"
             redraw();
         }
     }
-
-    function mouseClick(x, y) {
-        // We first check if the click was the end of a 'click&move' (handled elsewhere)
-        // If it is not, we apply 'single click' behavior
-        var was_drawing = (painter.clickX.length > 2);
-        mouseUp();
-        if(!was_drawing)
-        {
-            // apply offset to mouse position
-            x -= W / 2;
-            y -= H / 2;
-            var linkDescr = level.getClosestLink(x, y);
-            if (!editorMode) {
-                if (linkDescr) {
-                    var link = level.grid.getLink(linkDescr);
-                    if (link && link.lockLevel < 1) {
-                        switch (link.state) {
-                            case TileLink.stateEnum.CLEAR:
-                                link.state = TileLink.stateEnum.IN_PATH;
-                            break;
-                            case TileLink.stateEnum.IN_PATH:
-                                link.state = TileLink.stateEnum.USER_WALL;
-                            break;
-                            case TileLink.stateEnum.USER_WALL:
-                                link.state = TileLink.stateEnum.CLEAR;
-                            break;
+    
+    function clickEvent(x, y)
+    {
+        // apply offset to mouse position
+        x -= W / 2;
+        y -= H / 2;
+        var linkDescr = level.getClosestLink(x, y);
+        if (!editorMode) {
+            if (linkDescr) {
+                var link = level.grid.getLink(linkDescr);
+                if (link && link.lockLevel < 1) {
+                    switch (link.state) {
+                        case TileLink.stateEnum.CLEAR:
+                            link.state = TileLink.stateEnum.IN_PATH;
+                        break;
+                        case TileLink.stateEnum.IN_PATH:
+                            link.state = TileLink.stateEnum.USER_WALL;
+                        break;
+                        case TileLink.stateEnum.USER_WALL:
+                            link.state = TileLink.stateEnum.CLEAR;
+                        break;
+                    }
+                    link.highlighted = true;
+                }
+            }
+        } else { // editorMode
+            var link = null;
+            if (linkDescr) { link = level.grid.getLink(linkDescr); }
+                if (link && !link.isDoor()) { // level wall toggling
+                    switch (link.state) {
+                        case TileLink.stateEnum.CLEAR:
+                            link.state = TileLink.stateEnum.LEVEL_WALL;
+                        break;
+                        case TileLink.stateEnum.LEVEL_WALL:
+                            link.state = TileLink.stateEnum.CLEAR;
+                        break;
+                    }
+                } else { // door toggling
+                    if (!link) {
+                        if (linkDescr) {
+                            level.makeDoor(linkDescr);
+                        } else {
+                            var doorDescr = level.getClosestDoorPosition(x, y);
+                            // check if the door already exists
+                            var doorLink = level.grid.getLink(doorDescr);
+                            if (doorLink) {
+                                level.removeDoor(doorDescr);
+                            } else {
+                                level.makeDoor(doorDescr);
+                            }
                         }
-                        link.highlighted = true;
+                    } else {
+                        // assert link is door (should be enforced earlier)
+                        if (!link.isDoor()) { throw new Error("Invalid door position"); }
+                        level.removeDoor(linkDescr);
                     }
                 }
-            } else { // editorMode
-                var link = null;
-                if (linkDescr) { link = level.grid.getLink(linkDescr); }
-                    if (link && !link.isDoor()) { // level wall toggling
-                        switch (link.state) {
-                            case TileLink.stateEnum.CLEAR:
-                                link.state = TileLink.stateEnum.LEVEL_WALL;
-                            break;
-                            case TileLink.stateEnum.LEVEL_WALL:
-                                link.state = TileLink.stateEnum.CLEAR;
-                            break;
-                        }
-                    } else { // door toggling
-                        if (!link) {
-                            if (linkDescr) {
-                                level.makeDoor(linkDescr);
-                            } else {
-                                var doorDescr = level.getClosestDoorPosition(x, y);
-                                // check if the door already exists
-                                var doorLink = level.grid.getLink(doorDescr);
-                                if (doorLink) {
-                                    level.removeDoor(doorDescr);
-                                } else {
-                                    level.makeDoor(doorDescr);
-                                }
-                            }
-                        } else {
-                            // assert link is door (should be enforced earlier)
-                            if (!link.isDoor()) { throw new Error("Invalid door position"); }
-                            level.removeDoor(linkDescr);
-                        }
-                    }
-            }
         }
-        redraw();
-        if (level.isFinished()) {
-            winMessage.textContent = "You win !";
-        } else {
-            winMessage.textContent = "";
-        }
+    }
+    function mouseClick(x, y) {
+
+        checkVictory
     }
 
     function redraw() {
@@ -384,6 +394,70 @@ onclick="mouseClick(mouseX, mouseY);"
         painter.drawLines(c);
     }
 
+    // touch screen functionality converter : translates "touch" events to mouse down, mouse up and mouse move
+    var convertTouchEvent = function (ev) {
+        var touch, ev_type, mouse_ev;
+        touch = ev.targetTouches[0];
+        ev.preventDefault();
+        switch (ev.type) {
+        case 'touchstart':
+            // Make sure only one finger is on the target
+            if (ev.targetTouches.length != 1) {
+                return;
+            }
+            touch = ev.targetTouches[0];
+            ev_type = 'mousedown';
+            break;
+        case 'touchmove':
+            // Make sure only one finger is on the target
+            if (ev.targetTouches.length != 1) {
+                return;
+            }
+            touch = ev.targetTouches[0];
+            ev_type = 'mousemove';
+            break;
+        case 'touchend':
+            
+            // Make sure only one finger is lifted from the target
+            // TODO AND CHECK: check that targetTouches is empty?
+            if (ev.changedTouches.length != 1) {
+                return;
+            }
+            console.log('touchend');
+            touch = ev.changedTouches[0];
+            ev_type = 'mouseup';
+            break;
+        default:
+            return;
+        }
+        /* console.debug("fake " + ev_type); */
+        mouse_ev = document.createEvent("MouseEvents");
+        mouse_ev.initMouseEvent(
+            ev_type, /* type of event */
+            true, /* can bubble? */
+            true, /* cancelable? */
+            window, /* event view */
+            0, /* mouse click count */
+            touch.screenX, /* event's screen x-coordinate */
+            touch.screenY, /* event's screen y-coordinate */
+            touch.clientX, /* event's client x-coordinate */
+            touch.clientY, /* event's client y-coordinate */
+            ev.ctrlKey, /* control key was pressed? */
+            ev.altKey, /* alt key was pressed? */
+            ev.shiftKey, /* shift key was pressed? */
+            ev.metaKey, /* meta key was pressed? */
+            0, /* mouse button */
+            null /* related target */
+        );
+        this.dispatchEvent(mouse_ev);
+    };
+     
+    var touch2mouse = function (el) {
+        el.addEventListener("touchstart", convertTouchEvent);
+        el.addEventListener("touchmove", convertTouchEvent);
+        el.addEventListener("touchend", convertTouchEvent);
+    };
+    touch2mouse(canvas);
     window.onload = redraw;
 
 </script>
