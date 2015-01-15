@@ -27,6 +27,7 @@ LinePainter.prototype.cleanLines = function()
 
 LinePainter.prototype.computeLines = function ()
 {
+    // todo : check every click and match them with the borders
     var found_borders = [];
 
     var rel_previous_x = 0;
@@ -70,7 +71,7 @@ LinePainter.prototype.computeLines = function ()
             var bordery = curr_door.y * this.level.tileSize;
             var borderx2 = borderx;// +  this.level.tileSize;
             var bordery2 = bordery;// +  this.level.tileSize;
-
+		
             switch(curr_door.dir){
                 case Tile.directions.UP:
                     borderx2 += this.level.tileSize;
@@ -95,13 +96,14 @@ LinePainter.prototype.computeLines = function ()
                 );
             if(crossing)
             {
-		var link = this.level.grid.getLink(curr_door);
-		if(link && found_borders.indexOf(link) == -1)
-			found_borders.push(link);
-		console.log("Doors = " + found_borders.length);
+                //console.log("crossed door");
+                //console.log(curr_door);
+                //var link = this.level.grid.getLink(curr_door);
+                //link.state = TileLink.stateEnum.IN_PATH;
+		found_borders.push(curr_door);
             }
         }
-	
+
         // check for left and top borders of each tile
         for(var w = 0; w < nbtiles_x; w++)
         {
@@ -166,8 +168,7 @@ LinePainter.prototype.computeLines = function ()
     console.log("Size = " + found_borders.length);
     for(var i = 0; i < found_borders.length; i++) {
         var link =  found_borders[i];
-	console.log(link);
-        if (link && link.lockLevel < 1) {
+        if (link) {
             switch (link.state) {
                 case TileLink.stateEnum.CLEAR:
                     link.state = TileLink.stateEnum.IN_PATH;
