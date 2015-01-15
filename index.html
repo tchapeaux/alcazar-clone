@@ -228,12 +228,14 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
 
     function clearLevel() {
         level.clear();
+        winMessage.textContent = "";
         redraw();
     };
 
     function cheatLevel() {
         var solver = new AlcazarAI(level);
         solver.solve();
+        checkVictory();
         redraw();
     }
 
@@ -249,7 +251,6 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
             // highlight closest link
             var x = mouseX - W / 2;
             var y = mouseY - H / 2;
-            //console.log("X = " + x + "; Y = " + y);
             var linkDescr = level.getClosestLink(x, y);
             if (linkDescr) {
                 var link = level.grid.getLink(linkDescr);
@@ -359,10 +360,6 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
                 }
         }
     }
-    function mouseClick(x, y) {
-
-        checkVictory
-    }
 
     function redraw() {
         c.save();
@@ -423,14 +420,12 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
             if (ev.changedTouches.length != 1) {
                 return;
             }
-            console.log('touchend');
             touch = ev.changedTouches[0];
             ev_type = 'mouseup';
             break;
         default:
             return;
         }
-        /* console.debug("fake " + ev_type); */
         mouse_ev = document.createEvent("MouseEvents");
         mouse_ev.initMouseEvent(
             ev_type, /* type of event */
