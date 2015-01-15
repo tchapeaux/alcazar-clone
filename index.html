@@ -35,7 +35,9 @@
         <a id="Level_2" href="#">002 (Easy)</a><br/>
         <a id="Level_3" href="#">003 (Alcazar Demo Level 5)</a><br/>
         <a id="Level_4" href="#">004 (Daily Alcazar 14-08-16)</a><br/>
-        <a id="Level_5" href="#">005 (Ball Room 01)</a>
+        <a id="Level_5" href="#">005 (Ball Room 01)</a><br/>
+        <a id="Level_6" href="#">006 (Test level)</a><br/>
+        <a id="Level_7" href="#">007 (Easy 2)</a>
     </span>
 
     <h3>Load a level</h3>
@@ -68,7 +70,19 @@
         newLevel = deserializeLevel(LZString.decompressFromBase64(code));
         setLevel(newLevel);
     };
-
+    link = document.getElementById("Level_6");
+    link.onclick = function() {
+        var code = "IzA+DkEsDcFMEMCuACALrAzq0AOUAxAJ1lgC9IA7Ac1AHUcAJYAJjoEEAZDgZVAGYADKAEBaHCICqABVDARANkky5wURwCi+ACqyRIJaGYijG7YZF8DR8dPMBOEaZ2WALAcsBWdyK9P+Cx01nMUCzS1UDN0tbNzcYnwMvOT8vOJkvL1svAHZEkVyUkMKHP0VomUVfINBFRVK9OVtc8tBciL8AEQB5LoAlXjwjUSaRYZlco16ASQBxBh0jfW7acGF80J1RKrNRcUKlrpXQIA="
+        newLevel = deserializeLevel(LZString.decompressFromBase64(code));
+        setLevel(newLevel);
+    };
+    link = document.getElementById("Level_7");
+    link.onclick = function() {
+        var code = "GwHwoghgzgngBAJhADhAMQE4FMsC8CWAdgOYgDqALABIXkCCAMgwMogDMICAtAAxcNg0AFU5duA4aLZcAqgAUQAEQDyygEqtafPhJHTpagJIBxKiL7Td7LgEYuR0yKAA";
+        newLevel = deserializeLevel(LZString.decompressFromBase64(code));
+        setLevel(newLevel);
+    };
+    
     function toggleEditorMode() {
         editorMode = !editorMode;
         var form = document.getElementById("editor_form");
@@ -298,6 +312,7 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
         if (!editorMode) {
             painting = false;
             painter.computeLines();
+            checkVictory();
             redraw();
         }
     }
