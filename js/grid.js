@@ -15,15 +15,22 @@ Tile.directions = {
 
 Tile.prototype.getNeighborLinks = function() {
     var links = [];
-    var directionsArray = [
-        Tile.directions.UP,
-        Tile.directions.RIGHT,
-        Tile.directions.DOWN,
-        Tile.directions.LEFT
-    ];
-    for (var i = 0; i < directionsArray.length; i++) {
-        if (this.neighborLinks[directionsArray[i]]) {
-            links.push(this.neighborLinks[directionsArray[i]]);
+    var is_outer = this.neighborLinks.length > 0;
+    if (is_outer) {
+        for (var i = this.neighborLinks.length - 1; i >= 0; i--) {
+            links.push(this.neighborLinks[i]);
+        }
+    } else {
+        var directionsArray = [
+            Tile.directions.UP,
+            Tile.directions.RIGHT,
+            Tile.directions.DOWN,
+            Tile.directions.LEFT
+        ];
+        for (var d = 0; d < directionsArray.length; d++) {
+            if (this.neighborLinks[directionsArray[d]]) {
+                links.push(this.neighborLinks[directionsArray[d]]);
+            }
         }
     }
     return links;
@@ -145,7 +152,7 @@ Grid.prototype.getLink = function(linkDescriptor) {
 };
 
 Grid.prototype.getDoors = function() {
-    var doors = [];
+    var doorDescriptions = [];
     for (var i = 0; i < this.outerTile.neighborLinks.length; i++) {
         var doorLink = this.outerTile.neighborLinks[i];
         var doorTile = doorLink.other(this.outerTile);
@@ -159,11 +166,11 @@ Grid.prototype.getDoors = function() {
         for (var j = 0; j < directionsArray.length; j++ ) {
             var dir = directionsArray[j];
             if (doorTile.neighborLinks[dir] == doorLink) {
-                doors.push(new TileLinkDescriptor(doorTile.x, doorTile.y, dir));
+                doorDescriptions.push(new TileLinkDescriptor(doorTile.x, doorTile.y, dir));
             }
         }
     }
-    return doors;
+    return doorDescriptions;
 };
 
 Grid.prototype.getLevelWalls = function() {

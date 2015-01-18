@@ -248,6 +248,11 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
 
     function cheatLevel() {
         var solver = new AlcazarAI(level);
+<<<<<<< HEAD
+        solver.solve();
+        checkVictory();
+        redraw();
+=======
         try {
             solver.solve();
         } catch (err) {
@@ -255,6 +260,7 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
         } finally {
             redraw();
         }
+>>>>>>> upstream/master
     }
 
     setLevel(getEasyTestLevel());
