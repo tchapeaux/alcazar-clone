@@ -34,12 +34,9 @@ LinePainter.prototype.computeLines = function ()
     var linkDescr = {x : 0, y : 0, dir : Tile.directions.TOP};
     var doors = this.level.grid.getDoors();
     for(var i = 0; i < this.clickX.length; i++) {
-        //console.log("X = " + clickX[i] + "; Y = " + clickY[i]);
         var posx = this.clickX[i] - W / 2;
         var posy = this.clickY[i] - H / 2;
-
-        //var linkDescr = level.getClosestLink(linkx, linky);
-
+    
         // this part is pretty ugly, but I don't want to change your js files
         var nbtiles_x = this.level.grid.sizeX;
         var nbtiles_y = this.level.grid.sizeY;
@@ -95,10 +92,9 @@ LinePainter.prototype.computeLines = function ()
                 );
             if(crossing)
             {
-                //console.log("crossed door");
-                //console.log(curr_door);
                 var link = this.level.grid.getLink(curr_door);
-                link.state = TileLink.stateEnum.IN_PATH;
+                if(link && found_borders.indexOf(link) == -1)
+                    found_borders.push(link);
             }
         }
 
@@ -129,7 +125,6 @@ LinePainter.prototype.computeLines = function ()
                         var link = this.level.grid.getLink(linkDescr);
                         if(link && found_borders.indexOf(link) == -1)
                         {
-                            //console.log('top');
                             found_borders.push(link);
                         }
                     }
@@ -150,20 +145,14 @@ LinePainter.prototype.computeLines = function ()
                     var link = this.level.grid.getLink(linkDescr);
                     if(link && found_borders.indexOf(link) == -1)
                     {
-                        //~ console.log('left');
-                        //~ console.log("Border = " + borderx + ";" + bordery);
-                        //~ console.log("Point = " + relative_position_x + ";" + relative_position_y);
                         found_borders.push(link);
                     }
                 }
             }
         }
-
-
         rel_previous_x = relative_position_x;
         rel_previous_y = relative_position_y;
     }
-    // console.log("Size = " + found_borders.length);
     for(var i = 0; i < found_borders.length; i++) {
         var link =  found_borders[i];
         if (link && link.lockLevel < 1) {
