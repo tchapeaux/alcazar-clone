@@ -13,7 +13,8 @@ AlcazarAI.prototype.solve = function() {
     while (wallUnstable || pathUnstable || loopUnstable || doorUnstable) {
         wallUnstable = this.fillObviousWalls();
         pathUnstable = this.fillObviousPaths();
-        loopUnstable = this.preventLoops();
+        loopUnstable = false;
+        //loopUnstable = this.preventLoops();
         doorUnstable = this.countDoors();
     }
 };
