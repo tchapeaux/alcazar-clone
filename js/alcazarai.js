@@ -96,10 +96,14 @@ AlcazarAI.prototype.preventLoops = function() {
                 // path endpoint detected
 
                 // find other endpoint
+                var pathLength = 1;
                 var currentLink = firstPaths[0];
                 var currentTile = currentLink.other(firstTile);
+                console.log("=== start path", firstTile.x, firstTile.y);
                 while (currentTile.getNeighborPaths().length == 2) {
+                    console.log("path tile:", currentTile.x, currentTile.y);
                     var paths = currentTile.getNeighborPaths();
+                    pathLength = pathLength + 1;
                     currentLink = (paths[0] === currentLink) ? paths[1] : paths[0];
                     currentTile = currentLink.other(currentTile);
                 }
@@ -128,7 +132,10 @@ AlcazarAI.prototype.preventLoops = function() {
                         separationLink = firstTile.neighborLinks[Tile.directions.UP];
                     }
                 }
-                if (separationLink && separationLink.state != TileLink.stateEnum.LEVEL_WALL) {
+                if (separationLink &&
+                    separationLink.state != TileLink.stateEnum.LEVEL_WALL &&
+                    pathLength > 2) {
+                    console.log("Closing loop with pathLength", pathLength);
                     if (separationLink.state != TileLink.stateEnum.USER_WALL) {
                         foundPreventableLoop = true;
                         separationLink.state = TileLink.stateEnum.USER_WALL;
