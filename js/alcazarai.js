@@ -9,10 +9,12 @@ AlcazarAI.prototype.solve = function() {
     var wallUnstable = true;
     var pathUnstable = true;
     var loopUnstable = true;
-    while (wallUnstable || pathUnstable || loopUnstable) {
+    var doorUnstable = true;
+    while (wallUnstable || pathUnstable || loopUnstable || doorUnstable) {
         wallUnstable = this.fillObviousWalls();
         pathUnstable = this.fillObviousPaths();
         loopUnstable = this.preventLoops();
+        doorUnstable = this.countDoors();
     }
 };
 
@@ -25,7 +27,7 @@ AlcazarAI.prototype.fillObviousWalls = function() {
             var tile = this.level.grid.getTile(i, j);
             var neighborPaths = tile.getNeighborPaths();
             if (neighborPaths.length > 2) {
-                throw new Error("Level in invalid state: Tile with more than 2 paths");
+                throw new Error("Tile with more than 2 paths");
             } else if (neighborPaths.length == 2) {
                 // exactly two neighbor paths => any clear neighbor link can be a wall
                 var neighborClears = tile.getNeighborClears();
@@ -52,7 +54,7 @@ AlcazarAI.prototype.fillObviousPaths = function() {
             var neighborLinks = tile.getNeighborLinks();
             var wallCount = neighborWalls.length + (4 - neighborLinks.length);
             if (wallCount > 2) {
-                throw new Error("Level in invalid state: Tile with more than 2 paths");
+                throw new Error("Tile with more than 2 walls");
             } else if (wallCount == 2) {
                 // exactly two neighbor walls => any clear neighbor link can be a path
                 var neighborClears = tile.getNeighborClears();
@@ -136,9 +138,70 @@ AlcazarAI.prototype.preventLoops = function() {
                 // handle bouncing (endpoints separated by one tile)
                 // TODOOOO...
 
+                // also TODO:
+                // If one of the endpoint is the outerTile (i.e. the path contain a door),
+                // and the other endpoint is next to a door --> close the door
             }
         }
     }
 
     return foundPreventableLoop;
+};
+
+AlcazarAI.prototype.bounce = function(x, y, direction) {
+    // body...
+};
+
+AlcazarAI.prototype.countDoors = function(first_argument) {
+    // Only two doors must be used in the path
+    // I.e. if two doors are left open, use them
+    // and if two doors are already used, close the others
+    var changedDoorState = false;
+
+    var doors = this.level.grid.getDoors();
+    var openDoors = [];
+    for (var i = doors.length - 1; i >= 0; i--) {
+        var doorLink = this.level.grid.getLink(doors[i]);
+        if (doorLink.state != TileLink.stateEnum.USER_WALL) {
+            openDoors.push(doorLink);
+        }
+    }
+
+    if (openDoors.length < 2) {
+        throw new Error("Not enough open doors left");
+    } else if (openDoors.length == 2) {
+        var firstDoor = openDoors[0];
+        var secondDoor = openDoors[1];
+        if (firstDoor.state != TileLink.stateEnum.IN_PATH) {
+            firstDoor.state = TileLink.stateEnum.IN_PATH;
+            changedDoorState = true;
+        }
+        if (secondDoor.state != TileLink.stateEnum.IN_PATH) {
+            secondDoor.state = TileLink.stateEnum.IN_PATH;
+            changedDoorState = true;
+        }
+    } else {
+        // more than two open doors
+        // if two are in the path => close the others
+        var doors_inpath = [];
+        for (var j = openDoors.length - 1; j >= 0; j--) {
+            var door = openDoors[j];
+            if (door.state == TileLink.stateEnum.IN_PATH) {
+                doors_inpath.push(door);
+            }
+        }
+
+        if (doors_inpath.length == 2) {
+            for (var k = openDoors.length - 1; k >= 0; k--) {
+                if (openDoors[k].state == TileLink.stateEnum.CLEAR) {
+                    openDoors[k].state = TileLink.stateEnum.USER_WALL;
+                    changedDoorState = true;
+                }
+            }
+        } else if (doors_inpath.length > 2) {
+            throw new Error("More than two used doors");
+        }
+    }
+
+    return changedDoorState;
 };
