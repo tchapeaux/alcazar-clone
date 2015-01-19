@@ -13,8 +13,7 @@ AlcazarAI.prototype.solve = function() {
     while (wallUnstable || pathUnstable || loopUnstable || doorUnstable) {
         wallUnstable = this.fillObviousWalls();
         pathUnstable = this.fillObviousPaths();
-        loopUnstable = false;
-        //loopUnstable = this.preventLoops();
+        loopUnstable = this.preventLoops();
         doorUnstable = this.countDoors();
     }
 };
@@ -97,19 +96,16 @@ AlcazarAI.prototype.preventLoops = function() {
                 // path endpoint detected
 
                 // find other endpoint
-                var pathLength = 1;
+                var pathLength = 2;
                 var currentLink = firstPaths[0];
                 var currentTile = currentLink.other(firstTile);
-                console.log("=== start path", firstTile.x, firstTile.y);
                 while (currentTile.getNeighborPaths().length == 2) {
-                    console.log("path tile:", currentTile.x, currentTile.y);
                     var paths = currentTile.getNeighborPaths();
                     pathLength = pathLength + 1;
                     currentLink = (paths[0] === currentLink) ? paths[1] : paths[0];
                     currentTile = currentLink.other(currentTile);
                 }
                 var lastTile = currentTile;
-
                 // mark both endpoints
                 marks[firstTile.x][firstTile.y] = true;
                 marks[lastTile.x][lastTile.y] = true;
@@ -119,7 +115,7 @@ AlcazarAI.prototype.preventLoops = function() {
                 var dy = lastTile.y - firstTile.y;
 
                 // handle adjacent endpoints
-                var separationLink;
+                var separationLink = undefined; // set explicitly to not be conserved between loops
                 if (dy === 0) {
                     if (dx == 1) {
                         separationLink = firstTile.neighborLinks[Tile.directions.RIGHT];
@@ -133,10 +129,9 @@ AlcazarAI.prototype.preventLoops = function() {
                         separationLink = firstTile.neighborLinks[Tile.directions.UP];
                     }
                 }
-                if (separationLink &&
+                if (separationLink !== undefined &&
                     separationLink.state != TileLink.stateEnum.LEVEL_WALL &&
                     pathLength > 2) {
-                    console.log("Closing loop with pathLength", pathLength);
                     if (separationLink.state != TileLink.stateEnum.USER_WALL) {
                         foundPreventableLoop = true;
                         separationLink.state = TileLink.stateEnum.USER_WALL;
