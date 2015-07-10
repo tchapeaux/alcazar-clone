@@ -6,15 +6,20 @@ var AlcazarAI = function(level) {
 };
 
 AlcazarAI.prototype.solve = function() {
-    var wallUnstable = true;
-    var pathUnstable = true;
-    var loopUnstable = true;
-    var doorUnstable = true;
-    while (wallUnstable || pathUnstable || loopUnstable || doorUnstable) {
-        wallUnstable = this.fillObviousWalls();
-        pathUnstable = this.fillObviousPaths();
-        loopUnstable = this.preventLoops();
-        doorUnstable = this.countDoors();
+    while (true) {
+        // apply "trivial" procedures until it is not efficient anymore
+        var wallUnstable = true;
+        var pathUnstable = true;
+        var loopUnstable = true;
+        var doorUnstable = true;
+        while (wallUnstable || pathUnstable || loopUnstable || doorUnstable) {
+            wallUnstable = this.fillObviousWalls();
+            pathUnstable = this.fillObviousPaths();
+            loopUnstable = this.preventLoops();
+            doorUnstable = this.countDoors();
+        }
+
+        break;  // todo: add random walls (one level, then two, then ... )
     }
 };
 
