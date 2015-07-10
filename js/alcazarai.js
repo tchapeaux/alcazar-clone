@@ -32,7 +32,7 @@ AlcazarAI.prototype.fillObviousWalls = function() {
             var tile = this.level.grid.getTile(i, j);
             var neighborPaths = tile.getNeighborPaths();
             if (neighborPaths.length > 2) {
-                throw new Error("Tile with more than 2 paths");
+                throw new Error("Tile " + String(i) + ", " + String(j) + " has more than 2 paths");
             } else if (neighborPaths.length == 2) {
                 // exactly two neighbor paths => any clear neighbor link can be a wall
                 var neighborClears = tile.getNeighborClears();
@@ -59,7 +59,7 @@ AlcazarAI.prototype.fillObviousPaths = function() {
             var neighborLinks = tile.getNeighborLinks();
             var wallCount = neighborWalls.length + (4 - neighborLinks.length);
             if (wallCount > 2) {
-                throw new Error("Tile with more than 2 walls");
+                throw new Error("Tile " + String(i) + ", " + String(j) + " with more than 2 walls");
             } else if (wallCount == 2) {
                 // exactly two neighbor walls => any clear neighbor link can be a path
                 var neighborClears = tile.getNeighborClears();
@@ -157,9 +157,36 @@ AlcazarAI.prototype.preventObviousLoops = function() {
                 // handle bouncing (endpoints separated by one tile)
                 // TODOOOO...
 
-                // also TODO:
                 // If one of the endpoint is the outerTile (i.e. the path contain a door),
                 // and the other endpoint is next to a door --> close the door
+                var notOuterEndTile = null;
+                var outerTile = this.level.grid.outerTile;
+                if (firstTile === outerTile || lastTile === outerTile) {
+                    if (firstTile === outerTile) { notOuterEndTile = lastTile; }
+                    if (lastTile === outerTile) { notOuterEndTile = firstTile; }
+
+                    var doors = this.level.grid.getDoors();
+
+                    // check if notouter adjacent to a door
+                    for (var d = doors.length - 1; d >= 0; d--) {
+                        var doorLink = this.level.grid.getLink(doors[d]);
+                        var neighborLinks = notOuterEndTile.getNeighborLinks();
+                        for (var l = 0; l < neighborLinks.length; l++) {
+                            var link = neighborLinks[l];
+                            if (link === doorLink) {
+                                // make sure that we are not closing the last door
+                                // in that case it will be in IN_PATH state after this
+                                this.openCloseObviousDoors();
+
+                                if (link.state === TileLink.stateEnum.CLEAR) {
+                                    link.state = TileLink.stateEnum.USER_WALL;
+                                    foundPreventableLoop = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
         }
     }
