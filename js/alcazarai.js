@@ -15,8 +15,8 @@ AlcazarAI.prototype.solve = function() {
         while (wallUnstable || pathUnstable || loopUnstable || doorUnstable) {
             wallUnstable = this.fillObviousWalls();
             pathUnstable = this.fillObviousPaths();
-            loopUnstable = this.preventLoops();
-            doorUnstable = this.countDoors();
+            loopUnstable = this.preventObviousLoops();
+            doorUnstable = this.openCloseObviousDoors();
         }
 
         break;  // todo: add random walls (one level, then two, then ... )
@@ -74,15 +74,17 @@ AlcazarAI.prototype.fillObviousPaths = function() {
     return foundObviousPath;
 };
 
-AlcazarAI.prototype.preventLoops = function() {
+AlcazarAI.prototype.preventObviousLoops = function() {
     // Prevent partial paths to form a loop, i.e:
     // if both ends are adjacent, add a wall between them
     // if both ends are one tile apart, prevent the separation tile to connect them (if possible)
+    // return true if any link is changed
     var foundPreventableLoop = false;
 
     var i, j;
 
     // create marker array with the same size as the level
+    // to mark already visited loop/tiles
     var marks = [];
     for (i = 0; i < this.level.grid.sizeX; i++) {
         marks.push([]);
@@ -97,14 +99,19 @@ AlcazarAI.prototype.preventLoops = function() {
         for (j = this.level.grid.sizeY - 1; j >= 0; j--) {
             var firstTile = this.level.grid.getTile(i, j);
             var firstPaths = firstTile.getNeighborPaths();
-            if (firstPaths.length == 1 && marks[i][j] === false) {
-                // path endpoint detected
-
+            var firstPathCount = firstPaths.length;
+            if (firstPathCount > 2) {
+                throw new Error("Tile " + String(i) + ", " + String(j) + " has more than 2 paths");
+            }
+            if (firstPathCount == 1 && marks[i][j] === false) {
                 // find other endpoint
                 var pathLength = 2;
                 var currentLink = firstPaths[0];
                 var currentTile = currentLink.other(firstTile);
                 while (currentTile.getNeighborPaths().length == 2) {
+                    if (currentTile === firstTile) {
+                        throw new Error("Loop detected at tile " + String(i) + ", " + String(j));
+                    }
                     var paths = currentTile.getNeighborPaths();
                     pathLength = pathLength + 1;
                     currentLink = (paths[0] === currentLink) ? paths[1] : paths[0];
@@ -115,12 +122,15 @@ AlcazarAI.prototype.preventLoops = function() {
                 marks[firstTile.x][firstTile.y] = true;
                 marks[lastTile.x][lastTile.y] = true;
 
+                // skip trivial paths (only one link)
+                if (pathLength == 2) { continue; }
+
                 // compare endpoints position
                 var dx = lastTile.x - firstTile.x;
                 var dy = lastTile.y - firstTile.y;
 
                 // handle adjacent endpoints
-                var separationLink = undefined; // set explicitly to not be conserved between loops
+                var separationLink = null;
                 if (dy === 0) {
                     if (dx == 1) {
                         separationLink = firstTile.neighborLinks[Tile.directions.RIGHT];
@@ -134,10 +144,11 @@ AlcazarAI.prototype.preventLoops = function() {
                         separationLink = firstTile.neighborLinks[Tile.directions.UP];
                     }
                 }
-                if (separationLink !== undefined &&
-                    separationLink.state != TileLink.stateEnum.LEVEL_WALL &&
-                    pathLength > 2) {
-                    if (separationLink.state != TileLink.stateEnum.USER_WALL) {
+                if (separationLink !== null) {
+                    if (separationLink.state == TileLink.stateEnum.IN_PATH) {
+                        throw new Error("Invalid State: loop separation link in path " + String(i) + ", " + String(j));
+                    }
+                    if (separationLink.state == TileLink.stateEnum.CLEAR) {
                         foundPreventableLoop = true;
                         separationLink.state = TileLink.stateEnum.USER_WALL;
                     }
@@ -157,13 +168,14 @@ AlcazarAI.prototype.preventLoops = function() {
 };
 
 AlcazarAI.prototype.bounce = function(x, y, direction) {
-    // body...
+    // TODO
 };
 
-AlcazarAI.prototype.countDoors = function(first_argument) {
+AlcazarAI.prototype.openCloseObviousDoors = function(first_argument) {
     // Only two doors must be used in the path
     // I.e. if two doors are left open, use them
     // and if two doors are already used, close the others
+    // return true if any link is changed
     var changedDoorState = false;
 
     var doors = this.level.grid.getDoors();
