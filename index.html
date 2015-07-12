@@ -68,7 +68,7 @@
         newLevel = deserializeLevel(LZString.decompressFromBase64(code));
         setLevel(newLevel);
     };
-    
+
     function toggleEditorMode() {
         editorMode = !editorMode;
         var form = document.getElementById("editor_form");
@@ -237,7 +237,7 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
         try {
             solver.solve();
         } catch (err) {
-            console.log("Solver stopped because of invalid level state: " + err.message)
+            alert("Solver stopped because of invalid level state: " + err.message)
         } finally {
             redraw();
         }
@@ -306,7 +306,7 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
             redraw();
         }
     }
-    
+
     function clickEvent(x, y)
     {
         // apply offset to mouse position
@@ -419,7 +419,7 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
             ev_type = 'mousemove';
             break;
         case 'touchend':
-            
+
             // Make sure only one finger is lifted from the target
             // TODO AND CHECK: check that targetTouches is empty?
             if (ev.changedTouches.length != 1) {
@@ -451,7 +451,7 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
         );
         this.dispatchEvent(mouse_ev);
     };
-     
+
     var touch2mouse = function (el) {
         el.addEventListener("touchstart", convertTouchEvent);
         el.addEventListener("touchmove", convertTouchEvent);
