@@ -50,6 +50,20 @@
 </div>
 
 <script>
+
+    fetch('./levels/incredible_co.json').then(function(response) {
+        var contentType = response.headers.get("content-type");
+        console.log(contentType)
+        if(contentType && contentType.indexOf("application/json") !== -1) {
+            return response.json().then(function(json) {
+                console.log(json);
+                // TODO -- use this to populate menu
+            });
+        } else {
+            console.log("Oops, we haven't got JSON!");
+        }
+    });
+
     var link = document.getElementById("Level_1");
     link.onclick = function() { setLevel(getTrivialTestLevel()); };
     link = document.getElementById("Level_2");
@@ -68,7 +82,7 @@
         newLevel = deserializeLevel(LZString.decompressFromBase64(code));
         setLevel(newLevel);
     };
-    
+
     function toggleEditorMode() {
         editorMode = !editorMode;
         var form = document.getElementById("editor_form");
@@ -306,7 +320,7 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
             redraw();
         }
     }
-    
+
     function clickEvent(x, y)
     {
         // apply offset to mouse position
@@ -419,7 +433,7 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
             ev_type = 'mousemove';
             break;
         case 'touchend':
-            
+
             // Make sure only one finger is lifted from the target
             // TODO AND CHECK: check that targetTouches is empty?
             if (ev.changedTouches.length != 1) {
@@ -451,7 +465,7 @@ onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scro
         );
         this.dispatchEvent(mouse_ev);
     };
-     
+
     var touch2mouse = function (el) {
         el.addEventListener("touchstart", convertTouchEvent);
         el.addEventListener("touchmove", convertTouchEvent);
