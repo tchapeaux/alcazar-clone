@@ -175,6 +175,7 @@ Level.prototype.draw = function(c) {
                 c.fill();
                 c.restore();
             }
+            // TODO -- if there are more than 2 walls around the tile: red tile (invalid)
         }
     }
 
@@ -401,7 +402,7 @@ Level.prototype.lock = function() {
         return;
     }
     // if no link is locked, then unlock all links
-    // this should be a different function (and handled at a higher level)
+    // TODO -- replace this with a toggleLock() function redirecting to a lock() and unlock() function
     for (i = 0; i < this.grid.sizeX; i++) {
         for (j = 0; j < this.grid.sizeY; j++) {
             tile = this.grid.getTile(i, j);
@@ -440,7 +441,7 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
             break;
     }
 
-    // rotate to have an horizontal wall if necessary
+    // if vertical wall: rotate context to have an horizontal wall
     switch (linkDescriptor.dir) {
         case Tile.directions.UP:
         case Tile.directions.DOWN:

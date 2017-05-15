@@ -1,0 +1,65 @@
+{
+	"book_collections": [
+		{
+			"collection_name": "Classic",
+			"books": [
+				{
+					"title": "An introduction",
+					"levels": [
+						"JwHwxgDAjARtA20QCYIgC4AsCmBLAdmAE7YAmuM82YA9gLYAOAhvgJ4gDqAzABJecBBADJCAyiCgSAtFCkBVAAogAIgHlVAJXHIQEKcilqOAORRS9ikEAA==",
+						"JwHwxgDAjARtA2EBMIkRAFwBYFMCWAdmAE44AmeM8OYA9gLYAOAhgQJ4gDqAzABLdcAggBlhAZRBRJAWgjThAUQBiAFRAARAPKaAShJRJZ0gKoAFEHLlmQQA",
+						"JwHwxgDAjARtA2EDMIBMEQBcAWBTAlgHZgBOuAJvjPLmAPYC2ADgIaECeIA6kgBIpcAggBlhAZTQgoAWgjThAUQBiAFSnTU0gKoAFEABEA8oYBKElHLm6QczUa4A5NNJkmAkgHFeaoA=",
+						"JwHwxgDAjARtA2EAsIBMEQBcAWBTAlgHZgBOuAJvjPLmAPYC2ADgIaECeIA6gMwASPbgEEAMiIDKIKGgC0EGSICiAMQAqIACIB5LQCVJg1HJkBVAAqyj2rgDkQ8qApXqgAA=",
+						"JwHwxgDAjARtA2ECsIBMEQBcAWBTAlgHZgBOuAJvjPLmAPYC2ADgIaECeIA6gMwASPbgEEAMiIDKaEFAC0skQFEAYgBU0cmYtUgAIgHk9AJUkAWdbMMBJAOJ81qGRBkBVAAognTtx5kP9XADkQIAAA==",
+						"JwHwxgDAjARtA2EBsIBMEQBcAWBTAlgHZgBOuAJvjPLmAPYC2ADgIaECeIA6gMwASAFm4BBADKiAymhBQAtHICqABTSzUs5SAAiAeR0AlKalXr9ASQDifACogI82aICiAMVtAA==",
+						"JwHwxgDAjARtA2EDsIBMEQBcAWBTAlgHZgBOuAJvjPLmAPYC2ADgIaECeIA6gMwASAFm4BBADKiAyiB4gIAWihyAqgAUQixarRyeytQBEA8oYBKUoah1yjXAHLbLJgJIBxPgBVZc+VsU+1QA",
+						"JwHwxgDAjARtA2EAcIBMEQBcAWBTAlgHZgBOuAJvjPLmAPYC2ADgIaECeIA6gMwASAFm4BBADKiAymjQBaKDICqABVmpFKgCIB5LQCUpPWRHWz5ugJIBxPgBVZPGdq4A5EEAAA==",
+						"JwHwxgDAjARtA2FQCYIgC4AsCmBLAdmAE7YAmuM82YA9gLYAOAhvgJ4gDqAzABIAsnAIIAZYQGUQyEFAC0yGcICiAMQAqkmbKVqQAEQDy+gEoSB8rjIMcAchvlGAkgHEe6iHIUq3mzzqAA==",
+						"JwHwxgDAjARtA2UIgEzIC4AsCmBLAdmAE7YAmuM82YA9gLYAOAhvgJ4gDqAzABIAsnAIIAZYQGVUIKAFoU0gKoAFVLIXKAIgHlNAJQkC5ENSCNzhAUQBiAFRPSu0rRwByKuToCSAcR62gA=="
+					]
+				},
+				{
+					"title": "Practice Rooms",
+					"levels": [
+						"JwHwxgDAjARhBMAbaJ4RAFwBYFMCWAdmAE44AmeMiOYA9gLYAOAhgQJ4gDqArABIBsXAIIAZEQGUQUKCAgBaACxyAqgAVUc+CvVatIgKIAxACoaAzHIMmNSq6Yta1IC923O5ruyCWP1Si15KtkamACIA8uEASpLw7q4RnABysnIBISBAAAA=",
+						"JwHwxgDAjARhBMAbBJ4RAFwBYFMCWAdmAE44AmeMiOYA9gLYAOAhgQJ4gDqArABIBsXAIIAZEQGUQUKFIC0UWSICiAMQAqc+ItUaFAZm3q5AFkO7Z3WQFUACqllbbIA1uVGDBpx7PPZptxqmnnYAIgDyYQBKkvByluGcAHIgQbKRAJIA4rwaQAAA"
+					]
+				},
+				{
+					"title": "Small Puzzles",
+					"levels": []
+				},
+				{
+					"title": "The Compass",
+					"levels": []
+				}
+			]
+		},
+		{
+			"collection_name": "Advanced",
+			"books": [
+				{
+					"title": "The Option",
+					"levels": []
+				},
+				{
+					"title": "The Spirals",
+					"levels": []
+				}
+			]
+		},
+		{
+			"collection_name": "Expert",
+			"books": [
+				{
+					"title": "Parralel Universes",
+					"levels": []
+				},
+				{
+					"title": "The Six Rooms",
+					"levels": []
+				}
+			]
+		}
+	]
+}

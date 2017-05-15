@@ -50,6 +50,20 @@
 </div>
 
 <script>
+
+    fetch('./levels/incredible_co.json').then(function(response) {
+        var contentType = response.headers.get("content-type");
+        console.log(contentType)
+        if(contentType && contentType.indexOf("application/json") !== -1) {
+            return response.json().then(function(json) {
+                console.log(json);
+                // TODO -- use this to populate menu
+            });
+        } else {
+            console.log("Oops, we haven't got JSON!");
+        }
+    });
+
     var link = document.getElementById("Level_1");
     link.onclick = function() { setLevel(getTrivialTestLevel()); };
     link = document.getElementById("Level_2");
