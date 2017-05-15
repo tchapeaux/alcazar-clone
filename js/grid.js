@@ -140,7 +140,7 @@ var Grid = function(sizeX, sizeY) {
             }
         }
     }
-    this.outerTile = new Tile(-1, -1); // represent "outside"
+    this.outerTile = new Tile(-1, -1); // represents "outside"
 };
 
 Grid.prototype.getTile = function(i, j) { return this.tiles[i][j]; };
