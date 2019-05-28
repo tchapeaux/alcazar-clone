@@ -25,7 +25,6 @@ function getEasyTestLevel() {
     return level;
 }
 
-
 function getMediumTestLevel() {
     var walls = [];
     walls.push(new TileLinkDescriptor(3, 0, Tile.directions.DOWN));
@@ -87,8 +86,12 @@ function deserializeLevel(levelString) {
     var nameLength = levelString.split("|")[0];
     levelString = levelString.slice(nameLength.length + 1); // +1 is "|"
     nameLength = parseInt(nameLength);
-    if (isNaN(nameLength)) { throw new Error("Invalid name length")}
-    if (nameLength > Level.MAX_LEVELNAME_LENGTH) { throw new Error("Level name cannot exceed 140 characters"); }
+    if (isNaN(nameLength)) {
+        throw new Error("Invalid name length");
+    }
+    if (nameLength > Level.MAX_LEVELNAME_LENGTH) {
+        throw new Error("Level name cannot exceed 140 characters");
+    }
     var nameInfo = levelString.substring(0, nameLength);
     levelString = levelString.slice(nameLength + 1); // +1 is "|"
 
@@ -100,8 +103,12 @@ function deserializeLevel(levelString) {
     var authorLength = levelString.split("|")[0];
     levelString = levelString.slice(authorLength.length + 1); // +1 is "|"
     authorLength = parseInt(authorLength);
-    if (isNaN(authorLength)) { throw new Error("Invalid author length")}
-    if (authorLength > Level.MAX_AUTHORNAME_LENGTH) { throw new Error("Level author name cannot exceed 140 characters"); }
+    if (isNaN(authorLength)) {
+        throw new Error("Invalid author length");
+    }
+    if (authorLength > Level.MAX_AUTHORNAME_LENGTH) {
+        throw new Error("Level author name cannot exceed 140 characters");
+    }
     var authorInfo = levelString.substring(0, authorLength);
     levelString = levelString.slice(authorLength + 1); // +1 is "|"
 
@@ -124,11 +131,17 @@ function deserializeLevel(levelString) {
     if (/^WALLS|/.exec(levelString)) {
         levelString = levelString.slice(6); // "WALLS|".length
         var wallsNumber = /^(\d+)|/.exec(levelString);
-        if (!wallsNumber) { throw new Error("Invalid WALLS tag"); }
+        if (!wallsNumber) {
+            throw new Error("Invalid WALLS tag");
+        }
         levelString = levelString.slice(wallsNumber[0].length + 1);
         for (var i = 0; i < parseInt(wallsNumber[1]); i++) {
-            var wallInfo = /^(\d+)-(\d+)-(LEFT|RIGHT|UP|DOWN)\|/.exec(levelString);
-            if (!wallInfo) { throw new Error("Invalid wall info for wall #" + i); }
+            var wallInfo = /^(\d+)-(\d+)-(LEFT|RIGHT|UP|DOWN)\|/.exec(
+                levelString
+            );
+            if (!wallInfo) {
+                throw new Error("Invalid wall info for wall #" + i);
+            }
             var x = parseInt(wallInfo[1]);
             var y = parseInt(wallInfo[2]);
             var dir = wallInfo[3];
@@ -143,11 +156,17 @@ function deserializeLevel(levelString) {
     if (/^DOORS|/.exec(levelString)) {
         levelString = levelString.slice(6); // "DOORS|".length
         var doorsNumber = /^(\d+)|/.exec(levelString);
-        if (!doorsNumber) { throw new Error("Invalid WALLS tag"); }
+        if (!doorsNumber) {
+            throw new Error("Invalid WALLS tag");
+        }
         levelString = levelString.slice(doorsNumber[0].length + 1);
         for (var i = 0; i < parseInt(doorsNumber[1]); i++) {
-            var doorInfo = /^(\d+)-(\d+)-(LEFT|RIGHT|UP|DOWN)\|/.exec(levelString);
-            if (!doorInfo) { throw new Error("Invalid door info for door #" + i); }
+            var doorInfo = /^(\d+)-(\d+)-(LEFT|RIGHT|UP|DOWN)\|/.exec(
+                levelString
+            );
+            if (!doorInfo) {
+                throw new Error("Invalid door info for door #" + i);
+            }
             var x = parseInt(doorInfo[1]);
             var y = parseInt(doorInfo[2]);
             var dir = doorInfo[3];
@@ -159,9 +178,10 @@ function deserializeLevel(levelString) {
     }
 
     if (levelString.length > 0) {
-        throw new Error("Superfluous information at the end of level string: " + levelString);
+        throw new Error(
+            "Superfluous information at the end of level string: " + levelString
+        );
     }
 
     return new Level(sizeX, sizeY, walls, doors, nameInfo, authorInfo);
-
 }

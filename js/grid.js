@@ -7,10 +7,10 @@ var Tile = function(x, y) {
 };
 
 Tile.directions = {
-    UP : "UP",
-    RIGHT : "RIGHT",
-    DOWN : "DOWN",
-    LEFT : "LEFT"
+    UP: "UP",
+    RIGHT: "RIGHT",
+    DOWN: "DOWN",
+    LEFT: "LEFT"
 };
 
 Tile.prototype.getNeighborLinks = function() {
@@ -52,8 +52,10 @@ Tile.prototype.getNeighborWalls = function() {
     var links = this.getNeighborLinks();
     var paths = [];
     for (var i = links.length - 1; i >= 0; i--) {
-        if (links[i].state == TileLink.stateEnum.USER_WALL ||
-            links[i].state == TileLink.stateEnum.LEVEL_WALL) {
+        if (
+            links[i].state == TileLink.stateEnum.USER_WALL ||
+            links[i].state == TileLink.stateEnum.LEVEL_WALL
+        ) {
             paths.push(links[i]);
         }
     }
@@ -80,9 +82,13 @@ var TileLink = function(tile1, tile2) {
 
 TileLink.prototype.other = function(tile) {
     // return the other endpoint
-    if (tile == this.tiles[0]) { return this.tiles[1]; }
-    else if (tile == this.tiles[1]) { return this.tiles[0]; }
-    else { throw new Error("Provided tile not in TileLink"); }
+    if (tile == this.tiles[0]) {
+        return this.tiles[1];
+    } else if (tile == this.tiles[1]) {
+        return this.tiles[0];
+    } else {
+        throw new Error("Provided tile not in TileLink");
+    }
 };
 
 TileLink.prototype.isDoor = function() {
@@ -93,10 +99,10 @@ TileLink.prototype.isDoor = function() {
 };
 
 TileLink.stateEnum = {
-    USER_WALL : "USER WALL",
-    LEVEL_WALL : "LEVEL WALL",
-    IN_PATH : "IN PATH",
-    CLEAR : "CLEAR"
+    USER_WALL: "USER WALL",
+    LEVEL_WALL: "LEVEL WALL",
+    IN_PATH: "IN PATH",
+    CLEAR: "CLEAR"
 };
 
 var TileLinkDescriptor = function(x, y, dir) {
@@ -105,10 +111,12 @@ var TileLinkDescriptor = function(x, y, dir) {
     if (isNaN(x) || x < 0 || isNaN(y) || y < 0) {
         throw new Error("TileLinkDescriptor: invalid x or y");
     }
-    if (dir != Tile.directions.UP &&
+    if (
+        dir != Tile.directions.UP &&
         dir != Tile.directions.RIGHT &&
         dir != Tile.directions.LEFT &&
-        dir != Tile.directions.DOWN) {
+        dir != Tile.directions.DOWN
+    ) {
         throw new Error("TileLinkDescriptor: invalid dir");
     }
     this.x = x;
@@ -127,13 +135,13 @@ var Grid = function(sizeX, sizeY) {
             this.tiles[i][j] = new Tile(i, j);
             var cur = this.tiles[i][j];
             if (i > 0) {
-                var left = this.tiles[i-1][j];
+                var left = this.tiles[i - 1][j];
                 link = new TileLink(cur, left);
                 cur.neighborLinks[Tile.directions.LEFT] = link;
                 left.neighborLinks[Tile.directions.RIGHT] = link;
             }
             if (j > 0) {
-                var up = this.tiles[i][j-1];
+                var up = this.tiles[i][j - 1];
                 link = new TileLink(cur, up);
                 cur.neighborLinks[Tile.directions.UP] = link;
                 up.neighborLinks[Tile.directions.DOWN] = link;
@@ -143,7 +151,9 @@ var Grid = function(sizeX, sizeY) {
     this.outerTile = new Tile(-1, -1); // represents "outside"
 };
 
-Grid.prototype.getTile = function(i, j) { return this.tiles[i][j]; };
+Grid.prototype.getTile = function(i, j) {
+    return this.tiles[i][j];
+};
 Grid.prototype.getLink = function(linkDescriptor) {
     var x = linkDescriptor.x;
     var y = linkDescriptor.y;
@@ -163,10 +173,12 @@ Grid.prototype.getDoors = function() {
             Tile.directions.LEFT,
             Tile.directions.RIGHT
         ];
-        for (var j = 0; j < directionsArray.length; j++ ) {
+        for (var j = 0; j < directionsArray.length; j++) {
             var dir = directionsArray[j];
             if (doorTile.neighborLinks[dir] == doorLink) {
-                doorDescriptions.push(new TileLinkDescriptor(doorTile.x, doorTile.y, dir));
+                doorDescriptions.push(
+                    new TileLinkDescriptor(doorTile.x, doorTile.y, dir)
+                );
             }
         }
     }
@@ -178,9 +190,9 @@ Grid.prototype.getLevelWalls = function() {
     for (var i = 0; i < this.sizeX; i++) {
         for (var j = 0; j < this.sizeY; j++) {
             var directionsArray = [
-            // only two directions (else we get duplicates)
-            Tile.directions.UP,
-            Tile.directions.LEFT,
+                // only two directions (else we get duplicates)
+                Tile.directions.UP,
+                Tile.directions.LEFT
             ];
             for (var d = 0; d < directionsArray.length; d++) {
                 var dir = directionsArray[d];

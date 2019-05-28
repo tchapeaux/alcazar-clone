@@ -11,8 +11,12 @@ var Level = function(sizeX, sizeY, walls, doors, name, author) {
     name = typeof name !== "undefined" ? name : "Unnamed level";
     author = typeof author !== "undefined" ? author : "Anonymous";
 
-    if (name.length > Level.MAX_LEVELNAME_LENGTH) { throw new Error("Level name cannot exceed 140 characters"); }
-    if (author.length > Level.MAX_AUTHORNAME_LENGTH) { throw new Error("Level author name cannot exceed 140 characters"); }
+    if (name.length > Level.MAX_LEVELNAME_LENGTH) {
+        throw new Error("Level name cannot exceed 140 characters");
+    }
+    if (author.length > Level.MAX_AUTHORNAME_LENGTH) {
+        throw new Error("Level author name cannot exceed 140 characters");
+    }
 
     this.grid = new Grid(sizeX, sizeY);
     this.name = name;
@@ -36,14 +40,12 @@ Level.MAX_AUTHORNAME_LENGTH = 30;
 
 Level.prototype.makeDoor = function(door) {
     // assert valid door position
-    if (door.dir == Tile.directions.LEFT ||
-        door.dir == Tile.directions.RIGHT) {
+    if (door.dir == Tile.directions.LEFT || door.dir == Tile.directions.RIGHT) {
         if (door.x !== 0 && door.x != this.grid.sizeX - 1) {
             throw new RangeError("Invalid x door position: " + String(door.x));
         }
     }
-    if (door.dir == Tile.directions.UP ||
-        door.dir == Tile.directions.DOWN) {
+    if (door.dir == Tile.directions.UP || door.dir == Tile.directions.DOWN) {
         if (door.y !== 0 && door.y != this.grid.sizeY - 1) {
             throw new RangeError("Invalid y door position: " + String(door.y));
         }
@@ -103,7 +105,7 @@ Level.prototype.resize = function(newSizeX, newSizeY) {
         if (door.dir == Tile.directions.DOWN) {
             door.y = newSizeY - 1;
         }
-        if (door.x < newSizeX && door.y < newSizeY ) {
+        if (door.x < newSizeX && door.y < newSizeY) {
             newDoors.push(door);
         }
     }
@@ -116,27 +118,38 @@ Level.prototype.fitCanvasDimension = function(W, H) {
     this.tileSize = Math.min(
         (W - 2 * this.borderWidth) / this.grid.sizeX,
         (H - 2 * this.borderWidth) / this.grid.sizeY
-        );
+    );
 };
 
 Level.prototype.draw = function(c) {
     var i, j; // loop variables
     c.save();
 
-    c.translate(-this.grid.sizeX * this.tileSize / 2, -this.grid.sizeY * this.tileSize / 2);
+    c.translate(
+        (-this.grid.sizeX * this.tileSize) / 2,
+        (-this.grid.sizeY * this.tileSize) / 2
+    );
 
     // border
     c.fillStyle = "rgb(100, 100, 100)";
     c.beginPath();
-    c.rect(-this.borderWidth, -this.borderWidth,
+    c.rect(
+        -this.borderWidth,
+        -this.borderWidth,
         this.grid.sizeX * this.tileSize + this.borderWidth * 2,
-        this.grid.sizeY * this.tileSize + this.borderWidth * 2);
+        this.grid.sizeY * this.tileSize + this.borderWidth * 2
+    );
     c.fill();
 
     // draw tile in a chess-like pattern
     c.fillStyle = "#E9E1C5";
     c.beginPath();
-    c.rect(0, 0, this.grid.sizeX * this.tileSize, this.grid.sizeY * this.tileSize);
+    c.rect(
+        0,
+        0,
+        this.grid.sizeX * this.tileSize,
+        this.grid.sizeY * this.tileSize
+    );
     c.fill();
     // darker tiles
     c.fillStyle = "#cbc0a6";
@@ -144,7 +157,12 @@ Level.prototype.draw = function(c) {
     for (i = 0; i < this.grid.sizeX; i++) {
         for (j = 0; j < this.grid.sizeY; j++) {
             if ((i + j) % 2 == 1) {
-                c.rect(i * this.tileSize, j * this.tileSize, this.tileSize, this.tileSize);
+                c.rect(
+                    i * this.tileSize,
+                    j * this.tileSize,
+                    this.tileSize,
+                    this.tileSize
+                );
             }
         }
     }
@@ -161,7 +179,12 @@ Level.prototype.draw = function(c) {
                 c.fillStyle = "blue";
                 c.globalAlpha = "0.3";
                 c.beginPath();
-                c.rect(i * this.tileSize, j * this.tileSize, this.tileSize, this.tileSize);
+                c.rect(
+                    i * this.tileSize,
+                    j * this.tileSize,
+                    this.tileSize,
+                    this.tileSize
+                );
                 c.fill();
                 c.restore();
             }
@@ -171,7 +194,12 @@ Level.prototype.draw = function(c) {
                 c.fillStyle = "red";
                 c.globalAlpha = "0.5";
                 c.beginPath();
-                c.rect(i * this.tileSize, j * this.tileSize, this.tileSize, this.tileSize);
+                c.rect(
+                    i * this.tileSize,
+                    j * this.tileSize,
+                    this.tileSize,
+                    this.tileSize
+                );
                 c.fill();
                 c.restore();
             }
@@ -202,10 +230,16 @@ Level.prototype.draw = function(c) {
         for (j = 0; j < this.grid.sizeY; j++) {
             var cur = this.grid.getTile(i, j);
             if (i >= 1 && cur.neighborLinks[Tile.directions.LEFT]) {
-                this.drawLink(c, new TileLinkDescriptor(i, j, Tile.directions.LEFT));
+                this.drawLink(
+                    c,
+                    new TileLinkDescriptor(i, j, Tile.directions.LEFT)
+                );
             }
             if (j >= 1 && cur.neighborLinks[Tile.directions.UP]) {
-                this.drawLink(c, new TileLinkDescriptor(i, j, Tile.directions.UP));
+                this.drawLink(
+                    c,
+                    new TileLinkDescriptor(i, j, Tile.directions.UP)
+                );
             }
         }
     }
@@ -233,18 +267,23 @@ Level.prototype.getClosestLink = function(x, y) {
     var dy = y - (tileY + 0.5) * this.tileSize;
     var quadrant = null;
     var angle = Math.atan2(dy, dx);
-    if (- Math.PI / 4 < angle && angle < Math.PI / 4) {
+    if (-Math.PI / 4 < angle && angle < Math.PI / 4) {
         quadrant = Tile.directions.RIGHT;
-    } else if (Math.PI / 4 < angle && angle < 3 * Math.PI / 4) {
+    } else if (Math.PI / 4 < angle && angle < (3 * Math.PI) / 4) {
         quadrant = Tile.directions.DOWN;
-    } else if (- 3 * Math.PI / 4 < angle && angle < - Math.PI / 4) {
+    } else if ((-3 * Math.PI) / 4 < angle && angle < -Math.PI / 4) {
         quadrant = Tile.directions.UP;
     } else {
         quadrant = Tile.directions.LEFT;
     }
 
     var closestLink = null;
-    if (tileX >= 0 && tileX < this.grid.sizeX && tileY >= 0 && tileY < this.grid.sizeY) {
+    if (
+        tileX >= 0 &&
+        tileX < this.grid.sizeX &&
+        tileY >= 0 &&
+        tileY < this.grid.sizeY
+    ) {
         closestLink = new TileLinkDescriptor(tileX, tileY, quadrant);
     }
     return closestLink;
@@ -257,15 +296,31 @@ Level.prototype.getClosestDoorPosition = function(x, y) {
 
     if (y > 0 && y < this.grid.sizeY * this.tileSize) {
         if (x < 0) {
-            return new TileLinkDescriptor(0, Math.floor(y / this.tileSize), Tile.directions.LEFT);
-        } else if ( x > this.tileSize * this.grid.sizeX) {
-            return new TileLinkDescriptor(this.grid.sizeX - 1, Math.floor(y / this.tileSize), Tile.directions.RIGHT);
+            return new TileLinkDescriptor(
+                0,
+                Math.floor(y / this.tileSize),
+                Tile.directions.LEFT
+            );
+        } else if (x > this.tileSize * this.grid.sizeX) {
+            return new TileLinkDescriptor(
+                this.grid.sizeX - 1,
+                Math.floor(y / this.tileSize),
+                Tile.directions.RIGHT
+            );
         }
-    } else if ( x > 0 && x < this.grid.sizeX * this.tileSize) {
+    } else if (x > 0 && x < this.grid.sizeX * this.tileSize) {
         if (y < 0) {
-            return new TileLinkDescriptor(Math.floor(x / this.tileSize), 0, Tile.directions.UP);
+            return new TileLinkDescriptor(
+                Math.floor(x / this.tileSize),
+                0,
+                Tile.directions.UP
+            );
         } else if (y > this.grid.sizeY * this.tileSize) {
-            return new TileLinkDescriptor(Math.floor(x / this.tileSize), this.grid.sizeY - 1, Tile.directions.DOWN);
+            return new TileLinkDescriptor(
+                Math.floor(x / this.tileSize),
+                this.grid.sizeY - 1,
+                Tile.directions.DOWN
+            );
         }
     }
 };
@@ -310,8 +365,11 @@ Level.prototype.isFinished = function() {
     for (i = 0; i < oTile.neighborLinks.length; i++) {
         link = oTile.neighborLinks[i];
         if (link.state == TileLink.stateEnum.IN_PATH) {
-            if (!startTile) { startTile = link.other(oTile); }
-            else { break; }
+            if (!startTile) {
+                startTile = link.other(oTile);
+            } else {
+                break;
+            }
         }
     }
     var cur = startTile;
@@ -361,7 +419,6 @@ Level.prototype.reset = function() {
     }
 };
 
-
 Level.prototype.clear = function() {
     // clear is like reset but it conserves locked links
     for (var i = 0; i < this.grid.sizeX; i++) {
@@ -370,10 +427,11 @@ Level.prototype.clear = function() {
             var neighborLinks = tile.getNeighborLinks();
             for (var d = 0; d < neighborLinks.length; d++) {
                 var link = neighborLinks[d];
-                if (link &&
+                if (
+                    link &&
                     link.state != TileLink.stateEnum.LEVEL_WALL &&
-                    link.lockLevel === 0)
-                {
+                    link.lockLevel === 0
+                ) {
                     link.state = TileLink.stateEnum.CLEAR;
                 }
             }
@@ -390,8 +448,12 @@ Level.prototype.lock = function() {
             neighborLinks = tile.getNeighborLinks();
             for (d = 0; d < neighborLinks.length; d++) {
                 link = neighborLinks[d];
-                if (link && link.lockLevel === 0 &&
-                    (link.state == TileLink.stateEnum.USER_WALL || link.state == TileLink.stateEnum.IN_PATH)) {
+                if (
+                    link &&
+                    link.lockLevel === 0 &&
+                    (link.state == TileLink.stateEnum.USER_WALL ||
+                        link.state == TileLink.stateEnum.IN_PATH)
+                ) {
                     link.lockLevel = link.lockLevel + 1;
                     foundLockableLinks = true;
                 }
@@ -445,7 +507,7 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
     switch (linkDescriptor.dir) {
         case Tile.directions.UP:
         case Tile.directions.DOWN:
-            c.rotate(Math.PI/2);
+            c.rotate(Math.PI / 2);
     }
 
     var width, length;
@@ -461,7 +523,7 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
             width = this.tileSize / 5;
             length = this.tileSize - width;
             c.beginPath();
-            c.rect(- width / 2, -length / 2, width, length);
+            c.rect(-width / 2, -length / 2, width, length);
             c.fill();
             c.stroke();
             break;
@@ -472,7 +534,12 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
                 c.fillStyle = defaultColor;
                 c.globalAlpha = 0.5;
                 c.beginPath();
-                c.rect(- this.tileSize / 2 - width / 2 + 10, -width / 2, this.tileSize + width - 20, width);
+                c.rect(
+                    -this.tileSize / 2 - width / 2 + 10,
+                    -width / 2,
+                    this.tileSize + width - 20,
+                    width
+                );
                 c.fill();
             }
             break;
@@ -480,7 +547,12 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
             width = this.tileSize / 5;
             c.fillStyle = defaultColor;
             c.beginPath();
-            c.rect(- this.tileSize / 2 - width / 2, -width / 2, this.tileSize + width, width);
+            c.rect(
+                -this.tileSize / 2 - width / 2,
+                -width / 2,
+                this.tileSize + width,
+                width
+            );
             c.fill();
             break;
         case TileLink.stateEnum.USER_WALL:
@@ -490,7 +562,7 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
             width = this.tileSize / 10;
             length = this.tileSize * 0.7;
             c.beginPath();
-            c.rect(- width / 2, -length / 2, width, length);
+            c.rect(-width / 2, -length / 2, width, length);
             c.fill();
             c.stroke();
             break;
@@ -500,7 +572,8 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
         c.save();
         c.beginPath();
         c.globalAlpha = 0.5;
-        c.fillStyle = link.state == TileLink.stateEnum.LEVEL_WALL ? "red" : "blue";
+        c.fillStyle =
+            link.state == TileLink.stateEnum.LEVEL_WALL ? "red" : "blue";
         c.arc(0, 0, this.tileSize / 8, 0, Math.PI * 2);
         c.fill();
         c.restore();
