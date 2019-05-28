@@ -614,5 +614,16 @@ Level.prototype.drawDoor = function(c, linkDescriptor) {
     c.fill();
     c.stroke();
 
+    // add blue or red tint if tile is highlighted
+    var pathLinkCount = tile.getNeighborPaths().length;
+    if (pathLinkCount >= 2) {
+        c.fillStyle = pathLinkCount == 2 ? "blue" : "red";
+        c.globalAlpha = pathLinkCount == 2 ? 0.3 : 0.5;
+        c.beginPath();
+        c.rect(-width / 2, -length / 2, width, length);
+        c.fill();
+        c.stroke();
+    }
+
     c.restore();
 };
