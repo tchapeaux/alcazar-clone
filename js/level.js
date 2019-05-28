@@ -247,6 +247,10 @@ Level.prototype.draw = function(c) {
     var doors = this.grid.getDoors();
     for (i = 0; i < doors.length; i++) {
         var door = doors[i];
+        // draw hole in the wall
+        this.drawDoor(c, door);
+
+        // draw link status
         this.drawLink(c, door);
     }
 
@@ -527,22 +531,6 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
             c.fill();
             c.stroke();
             break;
-        case TileLink.stateEnum.CLEAR:
-            var oTile = this.grid.outerTile;
-            if (link.tiles[0] == oTile || link.tiles[1] == oTile) {
-                width = this.tileSize / 20;
-                c.fillStyle = defaultColor;
-                c.globalAlpha = 0.5;
-                c.beginPath();
-                c.rect(
-                    -this.tileSize / 2 - width / 2 + 10,
-                    -width / 2,
-                    this.tileSize + width - 20,
-                    width
-                );
-                c.fill();
-            }
-            break;
         case TileLink.stateEnum.IN_PATH:
             width = this.tileSize / 5;
             c.fillStyle = defaultColor;
@@ -579,6 +567,52 @@ Level.prototype.drawLink = function(c, linkDescriptor) {
         c.restore();
         link.highlighted = false;
     }
+
+    c.restore();
+};
+
+Level.prototype.drawDoor = function(c, linkDescriptor) {
+    c.save();
+
+    var tile = this.grid.getTile(linkDescriptor.x, linkDescriptor.y);
+    var i = tile.x;
+    var j = tile.y;
+    var link = this.grid.getLink(linkDescriptor);
+
+    // translate to the wall position
+    switch (linkDescriptor.dir) {
+        case Tile.directions.UP:
+            c.translate((i + 0.5) * this.tileSize, j * this.tileSize);
+            break;
+        case Tile.directions.LEFT:
+            c.translate(i * this.tileSize, (j + 0.5) * this.tileSize);
+            break;
+        case Tile.directions.DOWN:
+            c.translate((i + 0.5) * this.tileSize, (j + 1) * this.tileSize);
+            break;
+        case Tile.directions.RIGHT:
+            c.translate((i + 1) * this.tileSize, (j + 0.5) * this.tileSize);
+            break;
+    }
+
+    // if vertical wall: rotate context to have an horizontal wall
+    switch (linkDescriptor.dir) {
+        case Tile.directions.UP:
+        case Tile.directions.DOWN:
+            c.rotate(Math.PI / 2);
+    }
+
+    var width, length;
+    var fillColor = (tile.x + tile.y) % 2 == 0 ? "#E9E1C5" : "#cbc0a6";
+    c.strokeStyle = "#00000000";
+    c.fillStyle = fillColor;
+    c.setLineDash([]);
+    width = this.borderWidth;
+    length = this.tileSize / 2;
+    c.beginPath();
+    c.rect(-width / 2, -length / 2, width, length);
+    c.fill();
+    c.stroke();
 
     c.restore();
 };
