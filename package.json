@@ -16,7 +16,5 @@
     "url": "https://github.com/tchapeaux/alcazar-clone/issues"
   },
   "homepage": "https://github.com/tchapeaux/alcazar-clone#readme",
-  "dependencies": {
-    "lz-string": "^1.4.4"
-  }
+  "dependencies": {}
 }
