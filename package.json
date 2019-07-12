@@ -1,0 +1,22 @@
+{
+  "name": "alcazar-clone",
+  "version": "1.0.0",
+  "description": "A clone of the now-disappeared mobile game Alcazar",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tchapeaux/alcazar-clone.git"
+  },
+  "author": "chapeauxthomas@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tchapeaux/alcazar-clone/issues"
+  },
+  "homepage": "https://github.com/tchapeaux/alcazar-clone#readme",
+  "dependencies": {
+    "lz-string": "^1.4.4"
+  }
+}
