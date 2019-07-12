@@ -171,6 +171,8 @@ AlcazarAI.prototype.preventObviousLoops = function() {
         }
 
         // handle bouncing (endpoints separated by one tile)
+        // we have possible bouncing here if abs(dx) === abs(dy) === 1
+        // then we must check the diagonally adjacent tile
         // TODOOOO...
 
         // If one of the endpoint is the outerTile (i.e. the path contain a door),
