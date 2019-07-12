@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <head>
-    <link
-        href="http://fonts.googleapis.com/css?family=Open+Sans"
-        rel="stylesheet"
-        type="text/css"
-    />
-    <link
-        href="http://fonts.googleapis.com/css?family=Lobster"
-        rel="stylesheet"
-        type="text/css"
-    />
-    <link rel="stylesheet" href="css/style.css" />
-    <meta charset="UTF-8" />
-    <link rel="icon" href="img/favicon.png" />
-    <link rel="apple-touch-icon-precomposed" href="img/favicon_apple.png" />
-    <title>OpenAlcazar</title>
+  <link
+    href="http://fonts.googleapis.com/css?family=Open+Sans"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <link
+    href="http://fonts.googleapis.com/css?family=Lobster"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <link rel="stylesheet" href="css/style.css" />
+  <meta charset="UTF-8" />
+  <link rel="icon" href="img/favicon.png" />
+  <link rel="apple-touch-icon-precomposed" href="img/favicon_apple.png" />
+  <title>OpenAlcazar</title>
 </head>
 
 <script src="js/grid.js"></script>
@@ -25,516 +25,598 @@
 <script src="node_modules/lz-string/libs/lz-string.min.js"></script>
 
 <body>
-    <div id="ui">
-        <img src="img/title.png" width="100%" />
-        <h2>
-            An
-            <a href="https://github.com/tchapeaux/alcazar-clone">open-source</a>
-            clone of
-            <a href="http://www.theincrediblecompany.com/try-alcazar"
-                >Alcazar</a
-            >
-        </h2>
+  <div id="ui">
+    <img src="img/title.png" width="100%" />
+    <h2>
+      An
+      <a href="https://github.com/tchapeaux/alcazar-clone">open-source</a>
+      clone of
+      <a href="http://www.theincrediblecompany.com/try-alcazar">Alcazar</a>
+    </h2>
 
-        <h3>Rules</h3>
-        <span>
-            Enter and exit each square exactly once<br />
-            Enter and exit the room exactly once
-        </span>
+    <h3>Rules</h3>
+    <span>
+      Enter and exit each square exactly once<br />
+      Enter and exit the room exactly once
+    </span>
 
-        <h3>Levels</h3>
-        <span>
-            <a id="Level_1" href="#">001 (Trivial)</a><br />
-            <a id="Level_2" href="#">002 (Easy)</a><br />
-            <a id="Level_3" href="#">003 (Alcazar Demo Level 5)</a><br />
-            <a id="Level_4" href="#">004 (Daily Alcazar 14-08-16)</a><br />
-            <a id="Level_5" href="#">005 (Ball Room 01)</a><br />
-        </span>
+    <h3>Levels</h3>
+    <span>
+      <a id="Level_1" href="#">001 (Trivial)</a><br />
+      <a id="Level_2" href="#">002 (Easy)</a><br />
+      <a id="Level_3" href="#">003 (Alcazar Demo Level 5)</a><br />
+      <a id="Level_4" href="#">004 (Daily Alcazar 14-08-16)</a><br />
+      <a id="Level_5" href="#">005 (Ball Room 01)</a><br />
+    </span>
 
-        <h3>Load a level</h3>
-        <span>
-            <span style="display: none;" id="loadLevel_error"><br /></span>
-            <input
-                type="text"
-                id="load_level_code"
-                placeholder="Enter level code here"
-            />
-            <button onclick="loadLevelCode();">Load</button>
-        </span>
+    <h3>Load a level from a code</h3>
+    <span>
+      <span style="display: none;" id="loadLevel_error"><br /></span>
+      <input
+        type="text"
+        id="load_level_code"
+        placeholder="Enter level code here"
+      />
+      <button onclick="loadLevelCode();">Load</button>
+    </span>
 
-        <h3>Create your own levels</h3>
-        <span><a id="LevelEditor" href="#">Toggle Editor mode</a></span>
+    <h3>Load a level from the original game</h3>
+
+    <div>
+      <select id="collection-select"></select>
+      <br />
+      <select id="book-select"
+        ><option>Please choose a collection first</option></select
+      >
+      <br />
+      <select id="level-select"
+        ><option>Please choose a level first</option></select
+      >
+      <br />
     </div>
 
-    <script>
-        fetch("./levels/incredible_co.json").then(function(response) {
-            var contentType = response.headers.get("content-type");
-            console.log(contentType);
-            if (contentType && contentType.indexOf("application/json") !== -1) {
-                return response.json().then(function(json) {
-                    console.log(json);
-                    // TODO -- use this to populate menu
-                });
-            } else {
-                console.log("Oops, we haven't got JSON!");
-            }
+    <h3>Create your own levels</h3>
+    <span><a id="LevelEditor" href="#">Toggle Editor mode</a></span>
+  </div>
+
+  <script>
+    let levelsData;
+    fetch("./levels/incredible_co.json").then(function(response) {
+      var contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        return response.json().then(function(json) {
+          levelsData = json;
+          console.log(json);
+
+          levelsData.book_collections.forEach(collection => {
+            const newCollectionItem = document.createElement("option");
+            newCollectionItem.value = collection.collection_name;
+
+            newCollectionItem.innerHTML = collection.collection_name;
+            collectionSelect.appendChild(newCollectionItem);
+          });
+
+          loadCollection();
+        });
+      } else {
+        console.log("Oops, we haven't got JSON!");
+      }
+    });
+
+    var link = document.getElementById("Level_1");
+    link.onclick = function() {
+      setLevel(getTrivialTestLevel());
+    };
+    link = document.getElementById("Level_2");
+    link.onclick = function() {
+      setLevel(getEasyTestLevel());
+    };
+    link = document.getElementById("Level_3");
+    link.onclick = function() {
+      setLevel(getMediumTestLevel());
+    };
+    link = document.getElementById("Level_4");
+    link.onclick = function() {
+      var code =
+        "IwFgPgIghglgNgTwASgLQAYAcrgDYzADMksiSAgnAMZQBeUATmAOoDsAEpi+QDI8DKBYGHSoArKgCqABQKoQU2cFStFYQqgBMajRp4BRAGIAVdalxqF2mWAUSbE7QZNgJeo6YkXnpiAHk/ACVBMTlRG1FvDzlVf2YAOVcVVDjE0QUfMCAAA=";
+      newLevel = deserializeLevel(LZString.decompressFromBase64(code));
+      setLevel(newLevel);
+    };
+    link = document.getElementById("Level_5");
+    link.onclick = function() {
+      var code =
+        "IwFgPgQghgNjAEAlA9sgtvAtPADMMwAbGAIIwDGUAXlAE7zIBmjAluS7GAOoAcAEsABM3EgBlRAZQIBOMDkwB2TAFUACgUzBMogKIAxACobp2/UcGYLuw2ADMllevshTN+z1dGXL618wffMBdgeUDgrTUwAFZNT2jFOJiTSMJMVMDUpUilULMwJRdstMcwABEAeXLEKQUwC3kihvUlC0QASQBxPiMlYC0KrgA5Os1+8qG7UcwB4fDp8eGgA=";
+      newLevel = deserializeLevel(LZString.decompressFromBase64(code));
+      setLevel(newLevel);
+    };
+
+    // Event listeners for 'load original game level'
+
+    const collectionSelect = document.getElementById("collection-select");
+    const bookSelect = document.getElementById("book-select");
+    const levelSelect = document.getElementById("level-select");
+
+    collectionSelect.addEventListener("change", loadCollection);
+    bookSelect.addEventListener("change", loadBook);
+    levelSelect.addEventListener("change", loadLevel);
+
+    function loadCollection() {
+      const collectionName = collectionSelect.value;
+
+      // empty book-select
+      bookSelect.innerHTML = "";
+
+      // add books to book-select
+      levelsData.book_collections
+        .find(c => c.collection_name === collectionName)
+        .books.forEach(book => {
+          const newBookItem = document.createElement("option");
+          newBookItem.value = book.title;
+
+          newBookItem.innerHTML = book.title;
+          bookSelect.appendChild(newBookItem);
         });
 
-        var link = document.getElementById("Level_1");
-        link.onclick = function() {
-            setLevel(getTrivialTestLevel());
-        };
-        link = document.getElementById("Level_2");
-        link.onclick = function() {
-            setLevel(getEasyTestLevel());
-        };
-        link = document.getElementById("Level_3");
-        link.onclick = function() {
-            setLevel(getMediumTestLevel());
-        };
-        link = document.getElementById("Level_4");
-        link.onclick = function() {
-            var code =
-                "IwFgPgIghglgNgTwASgLQAYAcrgDYzADMksiSAgnAMZQBeUATmAOoDsAEpi+QDI8DKBYGHSoArKgCqABQKoQU2cFStFYQqgBMajRp4BRAGIAVdalxqF2mWAUSbE7QZNgJeo6YkXnpiAHk/ACVBMTlRG1FvDzlVf2YAOVcVVDjE0QUfMCAAA=";
-            newLevel = deserializeLevel(LZString.decompressFromBase64(code));
-            setLevel(newLevel);
-        };
-        link = document.getElementById("Level_5");
-        link.onclick = function() {
-            var code =
-                "IwFgPgQghgNjAEAlA9sgtvAtPADMMwAbGAIIwDGUAXlAE7zIBmjAluS7GAOoAcAEsABM3EgBlRAZQIBOMDkwB2TAFUACgUzBMogKIAxACobp2/UcGYLuw2ADMllevshTN+z1dGXL618wffMBdgeUDgrTUwAFZNT2jFOJiTSMJMVMDUpUilULMwJRdstMcwABEAeXLEKQUwC3kihvUlC0QASQBxPiMlYC0KrgA5Os1+8qG7UcwB4fDp8eGgA=";
-            newLevel = deserializeLevel(LZString.decompressFromBase64(code));
-            setLevel(newLevel);
-        };
+      loadBook();
+    }
 
-        function toggleEditorMode() {
-            editorMode = !editorMode;
-            var form = document.getElementById("editor_form");
-            form.style.display = editorMode ? "block" : "none";
-            var widthInput = document.getElementById("editor_width");
-            widthInput.value = level.grid.sizeX;
-            var heightInput = document.getElementById("editor_height");
-            heightInput.value = level.grid.sizeY;
-            var gameDiv = document.getElementById("game");
-            gameDiv.style["background-color"] = editorMode
-                ? "#d4c48e"
-                : "#E9E1C5";
-            resetLevel();
+    function loadBook() {
+      const collectionName = collectionSelect.value;
+      const bookTitle = bookSelect.value;
+
+      // empty level-select
+      levelSelect.innerHTML = "";
+
+      // add levels to level-select
+      levelsData.book_collections
+        .find(c => c.collection_name === collectionName)
+        .books.find(b => b.title === bookTitle)
+        .levels.forEach((level, idx) => {
+          const newLevelItem = document.createElement("option");
+          newLevelItem.value = idx;
+
+          newLevelItem.innerHTML = idx + 1;
+          levelSelect.appendChild(newLevelItem);
+        });
+
+      loadLevel();
+    }
+
+    function loadLevel() {
+      const collectionName = collectionSelect.value;
+      const bookTitle = bookSelect.value;
+      const levelIdx = levelSelect.value;
+
+      const levelString = levelsData.book_collections
+        .find(c => c.collection_name === collectionName)
+        .books.find(b => b.title === bookTitle).levels[levelIdx];
+
+      if (!levelString) {
+        return;
+      }
+
+      const newLevel = deserializeLevel(
+        LZString.decompressFromBase64(levelString)
+      );
+
+      setLevel(newLevel);
+    }
+
+    function toggleEditorMode() {
+      editorMode = !editorMode;
+      var form = document.getElementById("editor_form");
+      form.style.display = editorMode ? "block" : "none";
+      var widthInput = document.getElementById("editor_width");
+      widthInput.value = level.grid.sizeX;
+      var heightInput = document.getElementById("editor_height");
+      heightInput.value = level.grid.sizeY;
+      var gameDiv = document.getElementById("game");
+      gameDiv.style["background-color"] = editorMode ? "#d4c48e" : "#E9E1C5";
+      resetLevel();
+    }
+
+    function loadLevelCode() {
+      var code = load_level_code.value;
+      try {
+        if (code.length === 0) {
+          throw new Error("Empty level code");
         }
+        newLevel = deserializeLevel(LZString.decompressFromBase64(code));
+        setLevel(newLevel);
+        loadLevel_error.style.display = "none";
+      } catch (e) {
+        var message = "Invalid level code (" + e.message + ")";
+        loadLevel_error.textContent = message;
+        loadLevel_error.style.display = "block";
+      }
+    }
 
-        function loadLevelCode() {
-            var code = load_level_code.value;
-            try {
-                if (code.length === 0) {
-                    throw new Error("Empty level code");
-                }
-                newLevel = deserializeLevel(
-                    LZString.decompressFromBase64(code)
-                );
-                setLevel(newLevel);
-                loadLevel_error.style.display = "none";
-            } catch (e) {
-                var message = "Invalid level code (" + e.message + ")";
-                loadLevel_error.textContent = message;
-                loadLevel_error.style.display = "block";
-            }
-        }
+    loadLevel_error.onclick = function() {
+      loadLevel_error.style.display = "none";
+    };
 
-        loadLevel_error.onclick = function() {
-            loadLevel_error.style.display = "none";
-        };
+    var link = document.getElementById("LevelEditor");
+    link.onclick = toggleEditorMode;
+  </script>
 
-        var link = document.getElementById("LevelEditor");
-        link.onclick = toggleEditorMode;
-    </script>
+  <div id="game">
+    <span id="winMessage"></span><br />
 
-    <div id="game">
-        <span id="winMessage"></span><br />
+    <canvas
+      width="800"
+      height="600"
+      onmouseleave="mouseLeave()"
+      onmousedown="mouseDown(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop); return false;"
+      onmousemove="mouseMoved(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop)"
+      onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop); return false;"
+    ></canvas>
 
-        <canvas
-            width="800"
-            height="600"
-            onmouseleave="mouseLeave()"
-            onmousedown="mouseDown(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop); return false;"
-            onmousemove="mouseMoved(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop)"
-            onmouseup="mouseUp(event.pageX - this.offsetLeft + document.documentElement.scrollLeft, event.pageY - this.offsetTop + document.documentElement.scrollTop); return false;"
-        ></canvas>
-
-        <div id="controls">
-            <button onclick="clearLevel()">Clear</button>
-            <button onclick="lockLevel()">Lock</button>
-            <button onclick="cheatLevel()">Cheat (very basic)</button>
-        </div>
-
-        <div>
-            <span id="title_levelName"></span>
-            <span id="title_authorName"></span>
-        </div>
-
-        <br />
-
-        <div>
-            <button onclick="resetLevel()">Reset Level</button>
-        </div>
-
-        <div id="editor_form">
-            <h2>EDITOR MODE ENABLED</h2>
-
-            <p>Click in the level to modify walls and doors.</p>
-
-            <form>
-                <!-- TODO: enforce Level.MAX_AUTHORNAME_LENGTH -->
-                Level:
-                <input type="text" name="levelname" id="levelnameinput" /> | By:
-                <input
-                    type="text"
-                    name="authorname"
-                    id="authornameinput"
-                /><br />
-                Width:
-                <input
-                    type="number"
-                    name="gridWidth"
-                    id="editor_width"
-                    min="1"
-                    max="20"
-                    size="2"
-                />
-                | Height:
-                <input
-                    type="number"
-                    name="gridWidth"
-                    id="editor_height"
-                    min="1"
-                    max="20"
-                    size="2"
-                />
-            </form>
-
-            <h2>Share your level</h2>
-            <p>
-                Copy-paste the following level code:
-                <input
-                    type="text"
-                    id="save_level_code"
-                    active="false"
-                    value=""
-                />
-            </p>
-
-            <script>
-                editor_width.onchange = function() {
-                    var newWidth = parseInt(editor_width.value);
-                    level.resize(newWidth, level.grid.sizeY);
-                    level.fitCanvasDimension(W, H);
-                    redraw();
-                };
-                editor_height.onchange = function() {
-                    var newHeight = parseInt(editor_height.value);
-                    level.resize(level.grid.sizeX, newHeight);
-                    level.fitCanvasDimension(W, H);
-                    redraw();
-                };
-                levelnameinput.onchange = function() {
-                    var newName = levelnameinput.value;
-                    level.name = newName;
-                    setLevel(level);
-                    populateLevelCode();
-                };
-                authornameinput.onchange = function() {
-                    var newName = authornameinput.value;
-                    level.author = newName;
-                    setLevel(level);
-                    populateLevelCode();
-                };
-
-                function populateLevelCode() {
-                    save_level_code.value = LZString.compressToBase64(
-                        serializeLevel(level)
-                    );
-                }
-            </script>
-        </div>
+    <div id="controls">
+      <button onclick="clearLevel()">Clear</button>
+      <button onclick="lockLevel()">Lock</button>
+      <button onclick="cheatLevel()">Cheat (very basic)</button>
     </div>
 
-    <script>
-        var canvas = document.querySelector("canvas");
-        //canvas.onmousedown = function() {return false;}
-        var c = canvas.getContext("2d");
+    <div>
+      <span id="title_levelName"></span>
+      <span id="title_authorName"></span>
+    </div>
 
-        var background_img = new Image();
-        background_img.onload = redraw;
-        background_img.src = "img/background_pattern.png";
+    <br />
 
-        var W = canvas.width;
-        var H = canvas.height;
+    <div>
+      <button onclick="resetLevel()">Reset Level</button>
+    </div>
 
-        var editorMode = false;
-        var level = null;
+    <div id="editor_form">
+      <h2>EDITOR MODE ENABLED</h2>
 
-        // new variables used for drawing lines and remembering the points positions
-        var painting = false;
-        var painter = new LinePainter();
+      <p>Click in the level to modify walls and doors.</p>
 
-        function resetLevel() {
-            level.reset();
-            redraw();
-        }
+      <form>
+        <!-- TODO: enforce Level.MAX_AUTHORNAME_LENGTH -->
+        Level:
+        <input type="text" name="levelname" id="levelnameinput" /> | By:
+        <input type="text" name="authorname" id="authornameinput" /><br />
+        Width:
+        <input
+          type="number"
+          name="gridWidth"
+          id="editor_width"
+          min="1"
+          max="20"
+          size="2"
+        />
+        | Height:
+        <input
+          type="number"
+          name="gridWidth"
+          id="editor_height"
+          min="1"
+          max="20"
+          size="2"
+        />
+      </form>
 
-        function setLevel(newLevel) {
-            level = newLevel;
-            level.fitCanvasDimension(W, H);
-            painter.level = level;
-            title_levelName.textContent = "Level: " + level.name;
-            levelnameinput.value = level.name;
-            title_authorName.textContent = "By " + level.author;
-            authornameinput.value = level.author;
-            redraw();
-        }
+      <h2>Share your level</h2>
+      <p>
+        Copy-paste the following level code:
+        <input type="text" id="save_level_code" active="false" value="" />
+      </p>
 
-        function lockLevel() {
-            level.lock();
-            redraw();
-        }
-
-        function clearLevel() {
-            level.clear();
-            winMessage.textContent = "";
-            redraw();
-        }
-
-        function cheatLevel() {
-            var solver = new AlcazarAI(level);
-            try {
-                solver.solve();
-            } catch (err) {
-                alert(
-                    "Solver stopped because of invalid level state: " +
-                        err.message
-                );
-            } finally {
-                redraw();
-            }
-        }
-
-        setLevel(getEasyTestLevel());
-
-        function mouseMoved(newX, newY) {
-            mouseX = newX;
-            mouseY = newY;
-
-            if (painting) {
-                painter.addMousePosition(newX, newY, true);
-            } else {
-                // highlight closest link
-                var x = mouseX - W / 2;
-                var y = mouseY - H / 2;
-                var linkDescr = level.getClosestLink(x, y);
-                if (linkDescr) {
-                    var link = level.grid.getLink(linkDescr);
-                    if (link) {
-                        link.highlighted = true;
-                    }
-                }
-            }
-            redraw();
-        }
-
-        function mouseDown(newX, newY) {
-            if (!editorMode) {
-                painting = true;
-                painter.addMousePosition(newX, newY, false);
-                redraw();
-            }
-        }
-
-        function checkVictory() {
-            if (level.isFinished()) {
-                winMessage.textContent = "You win !";
-            } else {
-                winMessage.textContent = "";
-            }
-        }
-
-        function mouseUp(x, y) {
-            painting = false;
-            // We first check if the click was the end of a 'click&move' (handled elsewhere)
-            // If it is not, we apply 'single click' behavior
-            var was_drawing = painter.clickX.length > 2;
-            if (was_drawing) painter.computeLines();
-            else {
-                painter.cleanLines();
-                clickEvent(x, y);
-            }
-            redraw();
-            checkVictory();
-        }
-
-        function mouseLeave() {
-            if (!editorMode) {
-                painting = false;
-                painter.computeLines();
-                checkVictory();
-                redraw();
-            }
-        }
-
-        function clickEvent(x, y) {
-            // apply offset to mouse position
-            x -= W / 2;
-            y -= H / 2;
-            var linkDescr = level.getClosestLink(x, y);
-            if (!editorMode) {
-                if (linkDescr) {
-                    var link = level.grid.getLink(linkDescr);
-                    if (link && link.lockLevel < 1) {
-                        switch (link.state) {
-                            case TileLink.stateEnum.CLEAR:
-                                link.state = TileLink.stateEnum.IN_PATH;
-                                break;
-                            case TileLink.stateEnum.IN_PATH:
-                                link.state = TileLink.stateEnum.USER_WALL;
-                                break;
-                            case TileLink.stateEnum.USER_WALL:
-                                link.state = TileLink.stateEnum.CLEAR;
-                                break;
-                        }
-                        link.highlighted = true;
-                    }
-                }
-            } else {
-                // editorMode
-                var link = null;
-                if (linkDescr) {
-                    link = level.grid.getLink(linkDescr);
-                }
-                if (link && !link.isDoor()) {
-                    // level wall toggling
-                    switch (link.state) {
-                        case TileLink.stateEnum.CLEAR:
-                            link.state = TileLink.stateEnum.LEVEL_WALL;
-                            break;
-                        case TileLink.stateEnum.LEVEL_WALL:
-                            link.state = TileLink.stateEnum.CLEAR;
-                            break;
-                    }
-                } else {
-                    // door toggling
-                    if (!link) {
-                        if (linkDescr) {
-                            level.makeDoor(linkDescr);
-                        } else {
-                            var doorDescr = level.getClosestDoorPosition(x, y);
-                            // check if the door already exists
-                            var doorLink = level.grid.getLink(doorDescr);
-                            if (doorLink) {
-                                level.removeDoor(doorDescr);
-                            } else {
-                                level.makeDoor(doorDescr);
-                            }
-                        }
-                    } else {
-                        // assert link is door (should be enforced earlier)
-                        if (!link.isDoor()) {
-                            throw new Error("Invalid door position");
-                        }
-                        level.removeDoor(linkDescr);
-                    }
-                }
-            }
-        }
-
-        function redraw() {
-            c.save();
-
-            c.save();
-            c.fillStyle = c.createPattern(background_img, "repeat");
-            c.setLineDash([]);
-            c.beginPath();
-            c.rect(0, 0, W, H);
-            c.fill();
-            c.restore();
-
-            if (editorMode) {
-                c.save();
-                c.fillStyle = "rgb(100, 100, 100)";
-                c.globalAlpha = 0.5;
-                c.beginPath();
-                c.rect(0, 0, W, H);
-                c.fill();
-                c.restore();
-            }
-
-            c.translate(W / 2, H / 2);
-            level.draw(c);
-
-            c.restore();
-            populateLevelCode();
-
-            painter.drawLines(c);
-        }
-
-        // touch screen functionality converter : translates "touch" events to mouse down, mouse up and mouse move
-        var convertTouchEvent = function(ev) {
-            var touch, ev_type, mouse_ev;
-            touch = ev.targetTouches[0];
-            ev.preventDefault();
-            switch (ev.type) {
-                case "touchstart":
-                    // Make sure only one finger is on the target
-                    if (ev.targetTouches.length != 1) {
-                        return;
-                    }
-                    touch = ev.targetTouches[0];
-                    ev_type = "mousedown";
-                    break;
-                case "touchmove":
-                    // Make sure only one finger is on the target
-                    if (ev.targetTouches.length != 1) {
-                        return;
-                    }
-                    touch = ev.targetTouches[0];
-                    ev_type = "mousemove";
-                    break;
-                case "touchend":
-                    // Make sure only one finger is lifted from the target
-                    // TODO AND CHECK: check that targetTouches is empty?
-                    if (ev.changedTouches.length != 1) {
-                        return;
-                    }
-                    touch = ev.changedTouches[0];
-                    ev_type = "mouseup";
-                    break;
-                default:
-                    return;
-            }
-            mouse_ev = document.createEvent("MouseEvents");
-            mouse_ev.initMouseEvent(
-                ev_type /* type of event */,
-                true /* can bubble? */,
-                true /* cancelable? */,
-                window /* event view */,
-                0 /* mouse click count */,
-                touch.screenX /* event's screen x-coordinate */,
-                touch.screenY /* event's screen y-coordinate */,
-                touch.clientX /* event's client x-coordinate */,
-                touch.clientY /* event's client y-coordinate */,
-                ev.ctrlKey /* control key was pressed? */,
-                ev.altKey /* alt key was pressed? */,
-                ev.shiftKey /* shift key was pressed? */,
-                ev.metaKey /* meta key was pressed? */,
-                0 /* mouse button */,
-                null /* related target */
-            );
-            this.dispatchEvent(mouse_ev);
+      <script>
+        editor_width.onchange = function() {
+          var newWidth = parseInt(editor_width.value);
+          level.resize(newWidth, level.grid.sizeY);
+          level.fitCanvasDimension(W, H);
+          redraw();
+        };
+        editor_height.onchange = function() {
+          var newHeight = parseInt(editor_height.value);
+          level.resize(level.grid.sizeX, newHeight);
+          level.fitCanvasDimension(W, H);
+          redraw();
+        };
+        levelnameinput.onchange = function() {
+          var newName = levelnameinput.value;
+          level.name = newName;
+          setLevel(level);
+          populateLevelCode();
+        };
+        authornameinput.onchange = function() {
+          var newName = authornameinput.value;
+          level.author = newName;
+          setLevel(level);
+          populateLevelCode();
         };
 
-        var touch2mouse = function(el) {
-            el.addEventListener("touchstart", convertTouchEvent);
-            el.addEventListener("touchmove", convertTouchEvent);
-            el.addEventListener("touchend", convertTouchEvent);
-        };
-        touch2mouse(canvas);
-        window.onload = redraw;
-    </script>
+        function populateLevelCode() {
+          save_level_code.value = LZString.compressToBase64(
+            serializeLevel(level)
+          );
+        }
+      </script>
+    </div>
+  </div>
+
+  <script>
+    var canvas = document.querySelector("canvas");
+    //canvas.onmousedown = function() {return false;}
+    var c = canvas.getContext("2d");
+
+    var background_img = new Image();
+    background_img.onload = redraw;
+    background_img.src = "img/background_pattern.png";
+
+    var W = canvas.width;
+    var H = canvas.height;
+
+    var editorMode = false;
+    var level = null;
+
+    // new variables used for drawing lines and remembering the points positions
+    var painting = false;
+    var painter = new LinePainter();
+
+    function resetLevel() {
+      level.reset();
+      redraw();
+    }
+
+    function setLevel(newLevel) {
+      level = newLevel;
+      level.fitCanvasDimension(W, H);
+      painter.level = level;
+      title_levelName.textContent = "Level: " + level.name;
+      levelnameinput.value = level.name;
+      title_authorName.textContent = "By " + level.author;
+      authornameinput.value = level.author;
+      redraw();
+
+      // remove 'YOU WIN' message
+      checkVictory();
+    }
+
+    function lockLevel() {
+      level.lock();
+      redraw();
+    }
+
+    function clearLevel() {
+      level.clear();
+      winMessage.textContent = "";
+      redraw();
+    }
+
+    function cheatLevel() {
+      var solver = new AlcazarAI(level);
+      try {
+        solver.solve();
+      } catch (err) {
+        alert("Solver stopped because of invalid level state: " + err.message);
+      } finally {
+        redraw();
+      }
+    }
+
+    setLevel(getEasyTestLevel());
+
+    function mouseMoved(newX, newY) {
+      mouseX = newX;
+      mouseY = newY;
+
+      if (painting) {
+        painter.addMousePosition(newX, newY, true);
+      } else {
+        // highlight closest link
+        var x = mouseX - W / 2;
+        var y = mouseY - H / 2;
+        var linkDescr = level.getClosestLink(x, y);
+        if (linkDescr) {
+          var link = level.grid.getLink(linkDescr);
+          if (link) {
+            link.highlighted = true;
+          }
+        }
+      }
+      redraw();
+    }
+
+    function mouseDown(newX, newY) {
+      if (!editorMode) {
+        painting = true;
+        painter.addMousePosition(newX, newY, false);
+        redraw();
+      }
+    }
+
+    function checkVictory() {
+      if (level.isFinished()) {
+        winMessage.textContent = "You win !";
+      } else {
+        winMessage.textContent = "";
+      }
+    }
+
+    function mouseUp(x, y) {
+      painting = false;
+      // We first check if the click was the end of a 'click&move' (handled elsewhere)
+      // If it is not, we apply 'single click' behavior
+      var was_drawing = painter.clickX.length > 2;
+      if (was_drawing) painter.computeLines();
+      else {
+        painter.cleanLines();
+        clickEvent(x, y);
+      }
+      redraw();
+      checkVictory();
+    }
+
+    function mouseLeave() {
+      if (!editorMode) {
+        painting = false;
+        painter.computeLines();
+        checkVictory();
+        redraw();
+      }
+    }
+
+    function clickEvent(x, y) {
+      // apply offset to mouse position
+      x -= W / 2;
+      y -= H / 2;
+      var linkDescr = level.getClosestLink(x, y);
+      if (!editorMode) {
+        if (linkDescr) {
+          var link = level.grid.getLink(linkDescr);
+          if (link && link.lockLevel < 1) {
+            switch (link.state) {
+              case TileLink.stateEnum.CLEAR:
+                link.state = TileLink.stateEnum.IN_PATH;
+                break;
+              case TileLink.stateEnum.IN_PATH:
+                link.state = TileLink.stateEnum.USER_WALL;
+                break;
+              case TileLink.stateEnum.USER_WALL:
+                link.state = TileLink.stateEnum.CLEAR;
+                break;
+            }
+            link.highlighted = true;
+          }
+        }
+      } else {
+        // editorMode
+        var link = null;
+        if (linkDescr) {
+          link = level.grid.getLink(linkDescr);
+        }
+        if (link && !link.isDoor()) {
+          // level wall toggling
+          switch (link.state) {
+            case TileLink.stateEnum.CLEAR:
+              link.state = TileLink.stateEnum.LEVEL_WALL;
+              break;
+            case TileLink.stateEnum.LEVEL_WALL:
+              link.state = TileLink.stateEnum.CLEAR;
+              break;
+          }
+        } else {
+          // door toggling
+          if (!link) {
+            if (linkDescr) {
+              level.makeDoor(linkDescr);
+            } else {
+              var doorDescr = level.getClosestDoorPosition(x, y);
+              // check if the door already exists
+              var doorLink = level.grid.getLink(doorDescr);
+              if (doorLink) {
+                level.removeDoor(doorDescr);
+              } else {
+                level.makeDoor(doorDescr);
+              }
+            }
+          } else {
+            // assert link is door (should be enforced earlier)
+            if (!link.isDoor()) {
+              throw new Error("Invalid door position");
+            }
+            level.removeDoor(linkDescr);
+          }
+        }
+      }
+    }
+
+    function redraw() {
+      c.save();
+
+      c.save();
+      c.fillStyle = c.createPattern(background_img, "repeat");
+      c.setLineDash([]);
+      c.beginPath();
+      c.rect(0, 0, W, H);
+      c.fill();
+      c.restore();
+
+      if (editorMode) {
+        c.save();
+        c.fillStyle = "rgb(100, 100, 100)";
+        c.globalAlpha = 0.5;
+        c.beginPath();
+        c.rect(0, 0, W, H);
+        c.fill();
+        c.restore();
+      }
+
+      c.translate(W / 2, H / 2);
+      level.draw(c);
+
+      c.restore();
+      populateLevelCode();
+
+      painter.drawLines(c);
+    }
+
+    // touch screen functionality converter : translates "touch" events to mouse down, mouse up and mouse move
+    var convertTouchEvent = function(ev) {
+      var touch, ev_type, mouse_ev;
+      touch = ev.targetTouches[0];
+      ev.preventDefault();
+      switch (ev.type) {
+        case "touchstart":
+          // Make sure only one finger is on the target
+          if (ev.targetTouches.length != 1) {
+            return;
+          }
+          touch = ev.targetTouches[0];
+          ev_type = "mousedown";
+          break;
+        case "touchmove":
+          // Make sure only one finger is on the target
+          if (ev.targetTouches.length != 1) {
+            return;
+          }
+          touch = ev.targetTouches[0];
+          ev_type = "mousemove";
+          break;
+        case "touchend":
+          // Make sure only one finger is lifted from the target
+          // TODO AND CHECK: check that targetTouches is empty?
+          if (ev.changedTouches.length != 1) {
+            return;
+          }
+          touch = ev.changedTouches[0];
+          ev_type = "mouseup";
+          break;
+        default:
+          return;
+      }
+      mouse_ev = document.createEvent("MouseEvents");
+      mouse_ev.initMouseEvent(
+        ev_type /* type of event */,
+        true /* can bubble? */,
+        true /* cancelable? */,
+        window /* event view */,
+        0 /* mouse click count */,
+        touch.screenX /* event's screen x-coordinate */,
+        touch.screenY /* event's screen y-coordinate */,
+        touch.clientX /* event's client x-coordinate */,
+        touch.clientY /* event's client y-coordinate */,
+        ev.ctrlKey /* control key was pressed? */,
+        ev.altKey /* alt key was pressed? */,
+        ev.shiftKey /* shift key was pressed? */,
+        ev.metaKey /* meta key was pressed? */,
+        0 /* mouse button */,
+        null /* related target */
+      );
+      this.dispatchEvent(mouse_ev);
+    };
+
+    var touch2mouse = function(el) {
+      el.addEventListener("touchstart", convertTouchEvent);
+      el.addEventListener("touchmove", convertTouchEvent);
+      el.addEventListener("touchend", convertTouchEvent);
+    };
+    touch2mouse(canvas);
+    window.onload = redraw;
+  </script>
 </body>
