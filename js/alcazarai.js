@@ -1,11 +1,11 @@
 /*global Grid, Tile, TileLink, TileLinkDescriptor */
 "use strict";
 
-var AlcazarAI = function(level) {
+var AlcazarAI = function (level) {
   this.level = level;
 };
 
-AlcazarAI.prototype.solve = function() {
+AlcazarAI.prototype.solve = function () {
   while (true) {
     // apply "trivial" procedures until it is not efficient anymore
     var wallUnstable = true;
@@ -23,7 +23,7 @@ AlcazarAI.prototype.solve = function() {
   }
 };
 
-AlcazarAI.prototype.fillObviousWalls = function() {
+AlcazarAI.prototype.fillObviousWalls = function () {
   // Fill tiles with two paths => other two links are walls
   // return true if any link is changed
   var foundObviousWall = false;
@@ -49,7 +49,7 @@ AlcazarAI.prototype.fillObviousWalls = function() {
   return foundObviousWall;
 };
 
-AlcazarAI.prototype.fillObviousPaths = function() {
+AlcazarAI.prototype.fillObviousPaths = function () {
   // Fill tiles with two walls => other two links are paths
   // return true if any link is changed
   var foundObviousPath = false;
@@ -78,7 +78,7 @@ AlcazarAI.prototype.fillObviousPaths = function() {
   return foundObviousPath;
 };
 
-AlcazarAI.prototype.preventObviousLoops = function() {
+AlcazarAI.prototype.preventObviousLoops = function () {
   // Prevent partial paths to form a loop, i.e:
   // if both ends are adjacent, add a wall between them
   // if both ends are one tile apart, prevent the separation tile to connect them (if possible)
@@ -219,7 +219,7 @@ AlcazarAI.prototype.bounce = function(x, y, direction) {
   // TODO
 };
 
-AlcazarAI.prototype.openCloseObviousDoors = function(first_argument) {
+AlcazarAI.prototype.openCloseObviousDoors = function (first_argument) {
   // Only two doors must be used in the path
   // I.e. if two doors are left open, use them
   // and if two doors are already used, close the others
