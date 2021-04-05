@@ -1,7 +1,8 @@
 # alcazar-clone
 
 A web based, open-source clone of the (now dead) Alcazar mobile game.
-Try it at www.thomaschapeaux.be/alcazar-clone
+
+Try it in your browser at www.thomaschapeaux.be/alcazar-clone
 
 # What was the original game?
 
