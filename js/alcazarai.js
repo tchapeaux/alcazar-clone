@@ -171,9 +171,53 @@ AlcazarAI.prototype.preventObviousLoops = function () {
         }
 
         // handle bouncing (endpoints separated by one tile)
+        // bouncing is a solving trick where we can quickly add paths to prevent a loop
         // we have possible bouncing here if abs(dx) === abs(dy) === 1
         // then we must check the diagonally adjacent tile
-        // TODOOOO...
+        if (Math.abs(dx) === Math.abs(dy) && Math.abs(dy) === 1) {
+          // We have 2 configuerations: |.'| and |'.|
+          var leftTile = firstTile.x < lastTile.x ? firstTile : lastTile;
+          var rightTile = firstTile.x > lastTile.x ? firstTile : lastTile;
+          var topTile = firstTile.y < lastTile.y ? firstTile : lastTile;
+
+          if (leftTile === topTile) {
+            // configuration |'.|
+            // bounce |. |
+            var bounceTile1 = this.level.grid.getTile(leftTile.x, rightTile.y);
+            this.bounce(
+              bounceTile1.x,
+              bounceTile1.y,
+              Tile.directions.LEFT,
+              Tile.directions.DOWN
+            );
+            // bounce | '|
+            var bounceTile2 = this.level.grid.getTile(rightTile.x, leftTile.y);
+            this.bounce(
+              bounceTile2.x,
+              bounceTile2.y,
+              Tile.directions.RIGHT,
+              Tile.directions.UP
+            );
+          } else {
+            // configuration |.'|
+            // bounce |' |
+            var bounceTile1 = this.level.grid.getTile(leftTile.x, rightTile.y);
+            this.bounce(
+              bounceTile1.x,
+              bounceTile1.y,
+              Tile.directions.LEFT,
+              Tile.directions.UP
+            );
+            // bounce | .|
+            var bounceTile2 = this.level.grid.getTile(rightTile.x, leftTile.y);
+            this.bounce(
+              bounceTile2.x,
+              bounceTile2.y,
+              Tile.directions.RIGHT,
+              Tile.directions.DOWN
+            );
+          }
+        }
 
         // If one of the endpoint is the outerTile (i.e. the path contain a door),
         // and the other endpoint is next to a door --> close the door
@@ -215,8 +259,51 @@ AlcazarAI.prototype.preventObviousLoops = function () {
   return foundPreventableLoop;
 };
 
-AlcazarAI.prototype.bounce = function(x, y, direction) {
-  // TODO
+AlcazarAI.prototype.bounce = function (tileX, tileY, bounceDirX, bounceDirY) {
+  var bouncedTile = this.level.grid.getTile(tileX, tileY);
+
+  var neighborPaths = bouncedTile.getNeighborPaths();
+  if (neighborPaths.length === 2) {
+    // Already handled, stop here
+    return false;
+  }
+
+  var bouncedLinkX = bouncedTile.neighborLinks[bounceDirX];
+  var bouncedLinkY = bouncedTile.neighborLinks[bounceDirY];
+
+  // some helpers
+  var _ts = TileLink.stateEnum;
+  var _td = Tile.directions;
+  var isHardWall = (link) =>
+    !link || [_ts.USER_WALL, _ts.LEVEL_WALL].includes(link.state);
+  var isClearPath = (link) =>
+    link && [_ts.CLEAR, _ts.IN_PATH].includes(link.state);
+
+  // bounce against a wall in the X direction
+  if (isHardWall(bouncedLinkX)) {
+    if (isClearPath(bouncedLinkY)) {
+      bouncedLinkY.state = _ts.IN_PATH;
+      // continue bounce
+      var newTileX = tileX + (bounceDirX === _td.RIGHT ? -1 : 1);
+      var newTileY = tileY + (bounceDirY === _td.UP ? -1 : 1);
+      var newBounceDirX = bounceDirX === _td.RIGHT ? _td.LEFT : _td.RIGHT;
+      var newBounceDirY = bounceDirY === _td.UP ? _td.UP : _td.DOWN;
+      this.bounce(newTileX, newTileY, newBounceDirX, newBounceDirY);
+    }
+  }
+
+  // bounce against a wall in the Y direction
+  if (isHardWall(bouncedLinkY)) {
+    if (isClearPath(bouncedLinkX)) {
+      bouncedLinkX.state = _ts.IN_PATH;
+      // continue bounce
+      var newTileX = tileX + (bounceDirX === _td.RIGHT ? 1 : -1);
+      var newTileY = tileY + (bounceDirY === _td.UP ? 1 : -1);
+      var newBounceDirX = bounceDirX === _td.RIGHT ? _td.RIGHT : _td.LEFT;
+      var newBounceDirY = bounceDirY === _td.UP ? _td.DOWN : _td.UP;
+      this.bounce(newTileX, newTileY, newBounceDirX, newBounceDirY);
+    }
+  }
 };
 
 AlcazarAI.prototype.openCloseObviousDoors = function (first_argument) {
